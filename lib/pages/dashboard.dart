@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+// ignore: implementation_imports
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -13,7 +12,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Project ZIG"),centerTitle: true, backgroundColor: Colors.amber,),
+      appBar: AppBar(title: const Text("Project ZIG"),centerTitle: true, backgroundColor: Colors.amber,),
     );
   }
 }

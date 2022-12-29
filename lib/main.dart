@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zig_project/pages/dashboard.dart';
-import 'package:zig_project/pages/signin.dart';
-import 'package:zig_project/pages/splash_screen.dart';
+import 'package:zig_project/pages/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,9 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:SignIn(),
+      home:LogIn(),
     );
   }
 }
