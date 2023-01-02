@@ -213,12 +213,14 @@ class _LogInState extends State<LogIn> {
                                 MaterialPageRoute(
                                     builder: ((context) => Dashboard())));
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                content:  Text("Incorrect Password!!")));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text("Incorrect Password!!")));
                           }
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                              content: Text("Incorrect Email Address!!")));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text("Incorrect Email Address!!")));
                         }
                       }
                     },
