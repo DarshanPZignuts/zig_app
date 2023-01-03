@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "581919418118",
+    "project_id": "zig-40d01",
+    "storage_bucket": "zig-40d01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581919418118:android:bb347a8a99eb483374e087",
+        "android_client_info": {
+          "package_name": "com.zignuts.zig"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "581919418118-402fbbjea7kcn5qdlmtnr856md2jrbr7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSi8rM-pfqs9NSpKx9n1pO9-GZZv4u4tQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "581919418118-402fbbjea7kcn5qdlmtnr856md2jrbr7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

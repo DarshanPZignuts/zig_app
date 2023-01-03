@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:zig_project/pages/dashboard.dart';
+import 'package:zig_project/pages/login.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,13 +13,19 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
-@override
+  @override
   void initState() {
-    // TODO: implement initState
-    
-    Timer(Duration(seconds: 5), (() {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => Dashboard())));
+    Timer(const Duration(seconds: 5), (() {
+      final user =
+          FirebaseAuth.instance.authStateChanges().listen((User? user) {
+        if (user != null) {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: ((context) => const Dashboard())));
+        } else {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: ((context) => const LogIn())));
+        }
+      });
     }));
   }
 
@@ -27,7 +33,11 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Center(child: Icon(Icons.android_sharp,size: 150,)),
+        child: const Center(
+            child: Icon(
+          Icons.android_sharp,
+          size: 150,
+        )),
         color: Colors.amber,
       ),
     );

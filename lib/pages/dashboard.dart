@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:zig_project/authentication/auth.dart';
+import 'package:zig_project/pages/login.dart';
 // ignore: implementation_imports
 
 class Dashboard extends StatefulWidget {
@@ -9,6 +12,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  Auth _auth = Auth();
   int currentIndex = 2;
 
   static const List<Widget> _widgetslist = [
@@ -64,6 +68,20 @@ class _DashboardState extends State<Dashboard> {
             style: ListTileStyle.drawer,
           ),
           Divider(color: Colors.grey.shade500),
+          ListTile(
+            onTap: () async {
+              await _auth.signOut();
+              if (FirebaseAuth.instance.currentUser == null) {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: ((context) => LogIn())),
+                    (route) => false);
+              }
+            },
+            title: Text("Signout"),
+            trailing: Icon(Icons.logout),
+            style: ListTileStyle.drawer,
+          ),
         ],
       )),
       body: _widgetslist[currentIndex],

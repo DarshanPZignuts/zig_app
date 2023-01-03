@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:zig_project/authentication/auth.dart';
 import 'package:zig_project/pages/dashboard.dart';
 import 'package:zig_project/pages/signin.dart';
 
@@ -10,6 +12,7 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
+  Auth _auth = Auth();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _passwordcontroller = TextEditingController();
@@ -108,7 +111,7 @@ class _LogInState extends State<LogIn> {
                 ),
                 Container(
                   color: Colors.white,
-                  height: height * 0.6419,
+                  height: height * 0.7,
                   width: width,
                   child: Padding(
                       padding: const EdgeInsets.only(top: 480),
@@ -129,130 +132,126 @@ class _LogInState extends State<LogIn> {
               ],
             ),
           ),
-          Positioned(
-            left: width * 0.1,
-            top: height * 0.25,
+          Center(
             child: Form(
               key: _formkey,
-              child: Container(
-                height: height * 0.35,
-                width: width * 0.8,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  boxShadow: [
-                    BoxShadow(
-                        offset: const Offset(2, 2),
-                        color: Colors.grey.shade400,
-                        blurRadius: 10,
-                        spreadRadius: 1)
-                  ],
-                ),
-                child: Column(children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  _buildInput(
-                      label: "Email",
-                      obscureText: false,
-                      isPassword: false,
-                      validate: (String? val) {},
-                      controller: _emailcontroller),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  _buildInput(
-                      isPassword: true,
-                      label: "Password",
-                      obscureText: !showPassword,
-                      validate: (String? val) {
-                        if (val!.isEmpty || val == null) {
-                          return "* required";
-                        } else if (val.length < 6) {
-                          return "Invalid password";
-                        } else if (!RegExp(r"[a-zA-Z]").hasMatch(val)) {
-                          return "Invalid password";
-                        } else if (!RegExp(r"[0-9]").hasMatch(val)) {
-                          return "Invalid password";
-                        }
-                      },
-                      controller: _passwordcontroller),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        "Forget Password?",
-                        style: TextStyle(color: Colors.grey.shade600),
-                      ),
-                      TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            "RESET",
-                            style: TextStyle(color: Colors.amber),
-                          )),
-                      const SizedBox(
-                        width: 15,
-                      )
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 130),
+                child: Container(
+                  height: 335,
+                  width: 340,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    boxShadow: [
+                      BoxShadow(
+                          offset: const Offset(2, 2),
+                          color: Colors.grey.shade400,
+                          blurRadius: 10,
+                          spreadRadius: 1)
                     ],
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formkey.currentState!.validate()) {
-                        //static email and password for testing purpose
-                        if (_emailcontroller.text ==
-                            "darshanvano009@gmail.com") {
-                          if (_passwordcontroller.text == "test1234") {
-                            Navigator.pushReplacement(
+                  child: Column(children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    _buildInput(
+                        label: "Email",
+                        obscureText: false,
+                        isPassword: false,
+                        validate: (String? val) {},
+                        controller: _emailcontroller),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    _buildInput(
+                        isPassword: true,
+                        label: "Password",
+                        obscureText: !showPassword,
+                        validate: (String? val) {
+                          if (val!.isEmpty || val == null) {
+                            return "* required";
+                          } else if (val.length < 6) {
+                            return "Invalid password";
+                          } else if (!RegExp(r"[a-zA-Z]").hasMatch(val)) {
+                            return "Invalid password";
+                          } else if (!RegExp(r"[0-9]").hasMatch(val)) {
+                            return "Invalid password";
+                          }
+                        },
+                        controller: _passwordcontroller),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          "Forget Password?",
+                          style: TextStyle(color: Colors.grey.shade600),
+                        ),
+                        TextButton(
+                            onPressed: () {},
+                            child: const Text(
+                              "RESET",
+                              style: TextStyle(color: Colors.amber),
+                            )),
+                        const SizedBox(
+                          width: 15,
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (_formkey.currentState!.validate()) {
+                          final user = await _auth.logInwithEmailandpassword(
+                              _emailcontroller.text, _passwordcontroller.text);
+                          if (user != null) {
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: ((context) => Dashboard())));
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text("Incorrect Password!!")));
+                                SnackBar(content: Text("Invalid Credentials")));
                           }
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text("Incorrect Email Address!!")));
                         }
-                      }
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.amber),
-                      fixedSize: const MaterialStatePropertyAll(Size(200, 40)),
-                    ),
-                    child: const Text(
-                      "LOGIN",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Don't have account?",
-                        style: TextStyle(color: Colors.grey.shade500),
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.amber),
+                        fixedSize: MaterialStatePropertyAll(
+                            Size(width * 0.6, height * 0.02)),
                       ),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: ((context) => SignIn())));
-                          },
-                          child: const Text(
-                            "Create Account",
-                            style: TextStyle(color: Colors.amber),
-                          ))
-                    ],
-                  )
-                ]),
+                      child: const Text(
+                        "LOGIN",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don't have account?",
+                          style: TextStyle(color: Colors.grey.shade500),
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: ((context) => SignIn())));
+                            },
+                            child: const Text(
+                              "Create Account",
+                              style: TextStyle(color: Colors.amber),
+                            ))
+                      ],
+                    )
+                  ]),
+                ),
               ),
             ),
           )

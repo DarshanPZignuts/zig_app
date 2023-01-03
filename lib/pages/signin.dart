@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:zig_project/authentication/auth.dart';
+import 'package:zig_project/pages/dashboard.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -11,12 +10,15 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  Auth _auth = Auth();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _passwordcontroller = TextEditingController();
-  final TextEditingController _confirmpasswordcontroller = TextEditingController();
+  final TextEditingController _confirmpasswordcontroller =
+      TextEditingController();
   final TextEditingController _usernamecontroller = TextEditingController();
-  RegExp regemail = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  RegExp regemail = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   bool showPassword = false;
 
   Widget _buildInput(
@@ -46,21 +48,23 @@ class _SignInState extends State<SignIn> {
                 focusedBorder: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.amber),
                     borderRadius: BorderRadius.all(Radius.circular(20))),
-                suffixIcon: isPassword? IconButton(
-                    onPressed: () {
-                      setState(() {
-
-                        if (showPassword) {
-                          showPassword = false;
-                        } else {
-                          showPassword = true;
-                        }
-                      });
-                    },
-                    
-                    icon: Icon(
-                        showPassword ? Icons.visibility_off : Icons.visibility,
-                        color: Colors.grey.shade500)):null,
+                suffixIcon: isPassword
+                    ? IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (showPassword) {
+                              showPassword = false;
+                            } else {
+                              showPassword = true;
+                            }
+                          });
+                        },
+                        icon: Icon(
+                            showPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Colors.grey.shade500))
+                    : null,
                 label: Text(
                   label,
                   style: TextStyle(color: Colors.grey.shade600, fontSize: 15),
@@ -112,7 +116,7 @@ class _SignInState extends State<SignIn> {
                 ),
                 Container(
                   color: Colors.white,
-                  height: height * 0.6419,
+                  height: height * 0.7,
                   width: width,
                   child: Padding(
                       padding: const EdgeInsets.only(top: 480),
@@ -133,14 +137,12 @@ class _SignInState extends State<SignIn> {
               ],
             ),
           ),
-          Positioned(
-            left: width * 0.1,
-            top: height * 0.2,
+          Center(
             child: Form(
               key: _formkey,
               child: Container(
-                height: height * 0.47,
-                width: width * 0.8,
+                height: 400,
+                width: 340,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
@@ -157,7 +159,7 @@ class _SignInState extends State<SignIn> {
                     height: 20,
                   ),
                   _buildInput(
-                    isPassword: false,
+                      isPassword: false,
                       label: "Username",
                       obscureText: false,
                       onTap: () {},
@@ -187,7 +189,7 @@ class _SignInState extends State<SignIn> {
                     height: 15,
                   ),
                   _buildInput(
-                    isPassword: true,
+                      isPassword: true,
                       label: "Password",
                       obscureText: !showPassword,
                       onTap: () {},
@@ -207,7 +209,7 @@ class _SignInState extends State<SignIn> {
                     height: 15,
                   ),
                   _buildInput(
-                    isPassword: true,
+                      isPassword: true,
                       label: "Confirm Password",
                       obscureText: !showPassword,
                       onTap: () {},
@@ -228,7 +230,16 @@ class _SignInState extends State<SignIn> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formkey.currentState!.validate()) {
-                        print("Validated");
+                        final user = _auth.createNewAccount(
+                            _emailcontroller.text, _passwordcontroller.text);
+                        if (user != null) {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Dashboard()));
+                        } else {
+                          print("Failed to create new user!1");
+                        }
                       } else {
                         print("Invalid");
                       }
