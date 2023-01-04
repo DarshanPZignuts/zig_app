@@ -13,6 +13,7 @@ class LogIn extends StatefulWidget {
 
 class _LogInState extends State<LogIn> {
   Auth _auth = Auth();
+  bool isloading = false;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _passwordcontroller = TextEditingController();
@@ -191,7 +192,20 @@ class _LogInState extends State<LogIn> {
                           style: TextStyle(color: Colors.grey.shade600),
                         ),
                         TextButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              try {
+                                await FirebaseAuth.instance
+                                    .sendPasswordResetEmail(
+                                        email: "darshanvano009@gmail.com")
+                                    .whenComplete(() =>
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text("Success!!"))));
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(e.toString())));
+                              }
+                            },
                             child: const Text(
                               "RESET",
                               style: TextStyle(color: Colors.amber),
@@ -207,6 +221,9 @@ class _LogInState extends State<LogIn> {
                     ElevatedButton(
                       onPressed: () async {
                         if (_formkey.currentState!.validate()) {
+                          setState(() {
+                            isloading = true;
+                          });
                           final user = await _auth.logInwithEmailandpassword(
                               _emailcontroller.text, _passwordcontroller.text);
                           if (user != null) {
@@ -217,6 +234,9 @@ class _LogInState extends State<LogIn> {
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text("Invalid Credentials")));
+                            setState(() {
+                              isloading = false;
+                            });
                           }
                         }
                       },
@@ -226,11 +246,18 @@ class _LogInState extends State<LogIn> {
                         fixedSize: MaterialStatePropertyAll(
                             Size(width * 0.6, height * 0.02)),
                       ),
-                      child: const Text(
-                        "LOGIN",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w400),
-                      ),
+                      child: isloading
+                          ? Container(
+                              height: 10,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Text(
+                              "LOGIN",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w400),
+                            ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

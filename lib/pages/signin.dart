@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zig_project/authentication/auth.dart';
 import 'package:zig_project/pages/dashboard.dart';
@@ -228,7 +229,7 @@ class _SignInState extends State<SignIn> {
                     height: 20,
                   ),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formkey.currentState!.validate()) {
                         final user = _auth.createNewAccount(
                             _emailcontroller.text, _passwordcontroller.text);
