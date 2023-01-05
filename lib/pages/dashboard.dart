@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zig_project/authentication/auth.dart';
+import 'package:zig_project/pages/change_password.dart';
 import 'package:zig_project/pages/login.dart';
 // ignore: implementation_imports
 
@@ -54,6 +55,10 @@ class _DashboardState extends State<Dashboard> {
             title: Text("Change Password"),
             trailing: Icon(Icons.password),
             style: ListTileStyle.drawer,
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => ChangePassword()));
+            },
           ),
           Divider(color: Colors.grey.shade500),
           ListTile(

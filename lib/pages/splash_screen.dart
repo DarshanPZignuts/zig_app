@@ -33,12 +33,15 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: const Center(
-            child: Icon(
-          Icons.android_sharp,
-          size: 150,
+        child: Center(
+            child: Hero(
+          tag: "icon",
+          child: Image.asset(
+            "lib/assets/itunes.png",
+            height: 200,
+            width: 200,
+          ),
         )),
-        color: Colors.amber,
       ),
     );
   }

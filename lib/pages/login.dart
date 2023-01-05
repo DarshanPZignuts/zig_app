@@ -18,6 +18,8 @@ class _LogInState extends State<LogIn> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _passwordcontroller = TextEditingController();
+  RegExp regemail = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   bool showPassword = false;
 
   Widget _buildInput({
@@ -26,6 +28,7 @@ class _LogInState extends State<LogIn> {
     required TextEditingController controller,
     required bool obscureText,
     required String? validate(String? s),
+    bool? isLastField,
   }) {
     return Container(
         height: 80,
@@ -33,6 +36,11 @@ class _LogInState extends State<LogIn> {
         child: Padding(
             padding: const EdgeInsets.only(left: 8, right: 8),
             child: TextFormField(
+              textInputAction: isLastField == null
+                  ? TextInputAction.next
+                  : TextInputAction.done,
+              autofocus: true,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: validate,
               cursorColor: Colors.amber,
               cursorHeight: 20,
@@ -41,11 +49,11 @@ class _LogInState extends State<LogIn> {
               obscureText: obscureText,
               decoration: InputDecoration(
                 border: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                  borderSide: BorderSide(color: Colors.black),
+                ),
                 focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.amber),
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                  borderSide: BorderSide(color: Colors.amber),
+                ),
                 suffixIcon: isPassword
                     ? IconButton(
                         onPressed: () {
@@ -76,149 +84,167 @@ class _LogInState extends State<LogIn> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Form(
-        key: _formkey,
-        child: Container(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(
-              "Login",
-              style: TextStyle(color: Colors.amber, fontSize: 30),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              "Welcome back,",
-              style: TextStyle(color: Colors.grey.shade500),
-            ),
-            const SizedBox(
-              height: 150,
-            ),
-            _buildInput(
-                label: "Email",
-                obscureText: false,
-                isPassword: false,
-                validate: (String? val) {},
-                controller: _emailcontroller),
-            const SizedBox(
-              height: 30,
-            ),
-            _buildInput(
-                isPassword: true,
-                label: "Password",
-                obscureText: !showPassword,
-                validate: (String? val) {
-                  if (val!.isEmpty || val == null) {
-                    return "* required";
-                  } else if (val.length < 6) {
-                    return "Invalid password";
-                  } else if (!RegExp(r"[a-zA-Z]").hasMatch(val)) {
-                    return "Invalid password";
-                  } else if (!RegExp(r"[0-9]").hasMatch(val)) {
-                    return "Invalid password";
-                  }
-                },
-                controller: _passwordcontroller),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formkey,
+          child: Padding(
+            padding: EdgeInsets.only(top: height * 0.15),
+            child: Column(
               children: [
-                Text(
-                  "Forget Password?",
-                  style: TextStyle(color: Colors.grey.shade600),
+                Hero(
+                  tag: "icon",
+                  child: Image.asset(
+                    "lib/assets/itunes.png",
+                    height: 70,
+                    width: 70,
+                  ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 55),
-                  child: TextButton(
-                      onPressed: () async {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ResetPassword()));
-                        // try {
-                        //   await FirebaseAuth.instance
-                        //       .sendPasswordResetEmail(
-                        //           email: "darshanvano009@gmail.com")
-                        //       .whenComplete(() =>
-                        //           ScaffoldMessenger.of(context)
-                        //               .showSnackBar(SnackBar(
-                        //                   content: Text("Success!!"))));
-                        // } catch (e) {
-                        //   ScaffoldMessenger.of(context).showSnackBar(
-                        //       SnackBar(content: Text(e.toString())));
-                        // }
-                      },
-                      child: const Text(
-                        "RESET",
-                        style: TextStyle(color: Colors.amber),
-                      )),
-                ),
-                const SizedBox(
-                  width: 15,
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                if (_formkey.currentState!.validate()) {
-                  setState(() {
-                    isloading = true;
-                  });
-
-                  final user = await _auth.logInwithEmailandpassword(
-                      _emailcontroller.text, _passwordcontroller.text);
-
-                  if (user != null) {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: ((context) => Dashboard())));
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Invalid Credentials")));
-                    setState(() {
-                      isloading = false;
-                    });
-                  }
-                }
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.amber),
-                fixedSize:
-                    MaterialStatePropertyAll(Size(width * 0.6, height * 0.02)),
-              ),
-              child: isloading
-                  ? Container(
-                      height: 10,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                      ),
-                    )
-                  : const Text(
-                      "LOGIN",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-                    ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+                SizedBox(height: height * 0.1),
                 Text(
-                  "Don't have account?",
+                  "Login",
+                  style: TextStyle(color: Colors.amber, fontSize: 30),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Welcome back,",
                   style: TextStyle(color: Colors.grey.shade500),
                 ),
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: ((context) => SignIn())));
-                    },
-                    child: const Text(
-                      "Create Account",
-                      style: TextStyle(color: Colors.amber),
-                    ))
+                SizedBox(
+                  height: height * 0.1,
+                ),
+                Container(
+                  child: Column(children: [
+                    _buildInput(
+                        label: "Email",
+                        obscureText: false,
+                        isPassword: false,
+                        validate: (String? val) {
+                          if (val!.isEmpty || val == null) {
+                            return "Email should not be empty.";
+                          } else if (!regemail.hasMatch(val)) {
+                            return "Please enter correct email address";
+                          }
+                        },
+                        controller: _emailcontroller),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    _buildInput(
+                        isLastField: true,
+                        isPassword: true,
+                        label: "Password",
+                        obscureText: !showPassword,
+                        validate: (String? val) {
+                          if (val!.isEmpty || val == null) {
+                            return "Password should not be empty";
+                          } else if (val.length <= 6) {
+                            return "Minimum 6 letter required";
+                          } else if (!RegExp(r"[a-zA-Z]").hasMatch(val)) {
+                            return "Atleast one alphabet character required";
+                          } else if (!RegExp(r"[0-9]").hasMatch(val)) {
+                            return "Atleast one number required";
+                          }
+                        },
+                        controller: _passwordcontroller),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          "Forget Password?",
+                          style: TextStyle(color: Colors.grey.shade600),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 55),
+                          child: TextButton(
+                              onPressed: () async {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ResetPassword()));
+                              },
+                              child: const Text(
+                                "RESET",
+                                style: TextStyle(color: Colors.amber),
+                              )),
+                        ),
+                        const SizedBox(
+                          width: 15,
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 35,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        _formkey.currentState!.activate();
+                        if (_formkey.currentState!.validate()) {
+                          setState(() {
+                            isloading = true;
+                          });
+
+                          final user = await _auth.logInwithEmailandpassword(
+                              _emailcontroller.text, _passwordcontroller.text);
+
+                          if (user == "success") {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: ((context) => Dashboard())));
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(user.toString())));
+                            setState(() {
+                              isloading = false;
+                            });
+                          }
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.amber),
+                        fixedSize: MaterialStatePropertyAll(
+                            Size(width * 0.6, height * 0.02)),
+                      ),
+                      child: isloading
+                          ? Container(
+                              height: 10,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Text(
+                              "LOGIN",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w400),
+                            ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don't have account?",
+                          style: TextStyle(color: Colors.grey.shade500),
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: ((context) => SignIn())));
+                            },
+                            child: const Text(
+                              "Create Account",
+                              style: TextStyle(color: Colors.amber),
+                            ))
+                      ],
+                    )
+                  ]),
+                ),
               ],
-            )
-          ]),
+            ),
+          ),
         ),
       ),
     );
