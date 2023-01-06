@@ -3,21 +3,32 @@ import 'package:firebase_auth/firebase_auth.dart';
 class Auth {
   final _firebaseAuth = FirebaseAuth.instance;
 
+//User
+  User? getUser() {
+    return _firebaseAuth.currentUser;
+  }
+
 // Create user with email and password.......
 
-  Future<String?> createNewAccount(String email, String password) async {
+  Future<String?> createNewAccount(
+      {required String email,
+      required String password,
+      required String username}) async {
     try {
       UserCredential usercredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
-      User? user = usercredential.user;
+      User? user = await usercredential.user;
+      await user?.updateDisplayName(username);
       if (user != null) {
         return "success";
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
+      if (e.code == 'network-request-failed') {
+        return 'No Internet Connection';
+      } else if (e.code == 'weak-password') {
         return 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
-        return 'The account already exists for that email.';
+        return 'The account already exists for this email.';
       }
     } catch (e) {
       return e.toString();
@@ -36,10 +47,12 @@ class Auth {
         return "success";
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        return 'No user found for that email.';
+      if (e.code == 'network-request-failed') {
+        return 'No Internet Connection';
+      } else if (e.code == 'user-not-found') {
+        return 'No user found for this email.';
       } else if (e.code == 'wrong-password') {
-        return 'Wrong password provided for that user.';
+        return 'Wrong password provided for this user.';
       }
     } catch (e) {
       return e.toString();
@@ -52,6 +65,10 @@ class Auth {
     try {
       await _firebaseAuth.currentUser!.updatePassword(newPassword);
       return "success";
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'network-request-failed') {
+        return 'No Internet Connection';
+      }
     } catch (e) {
       return e.toString();
     }

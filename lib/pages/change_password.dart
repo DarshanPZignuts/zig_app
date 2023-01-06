@@ -55,7 +55,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   controller: _passwordController,
                   validator: (String? val) {
                     if (val!.isEmpty) {
-                      return "* required";
+                      return "Password should not be empty";
                     } else if (val.length < 6) {
                       return "Length should be greater or equal to 6 character";
                     } else if (!RegExp(r"[a-zA-Z]").hasMatch(val)) {
@@ -95,13 +95,18 @@ class _ChangePasswordState extends State<ChangePassword> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final message = _auth
+                final message = await _auth
                     .changePassword(_confirmPasswordController.text.trim());
                 if (message != null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(message.toString())));
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: ((context) => Dashboard())));
+                  if (message == "success") {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Password successfully changed.")));
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: ((context) => Dashboard())));
+                  } else {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(message)));
+                  }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text("Something went wrong!!")));

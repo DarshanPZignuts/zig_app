@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zig_project/authentication/auth.dart';
+import 'package:zig_project/pages/Other/dialog_box.dart';
 import 'package:zig_project/pages/change_password.dart';
 import 'package:zig_project/pages/login.dart';
 // ignore: implementation_imports
@@ -15,6 +16,14 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   final Auth _auth = Auth();
   int currentIndex = 2;
+  User? currentUser = null;
+
+  @override
+  void initState() {
+    currentUser = _auth.getUser();
+    // TODO: implement initState
+    super.initState();
+  }
 
   static const List<Widget> _widgetslist = [
     Center(
@@ -37,58 +46,64 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-          child: ListView(
-        children: [
-          UserAccountsDrawerHeader(
-            decoration: BoxDecoration(color: Colors.amber),
-            accountEmail: Text("darshanvano009@gmail.com"),
-            accountName: Text("Darshan Vanol"),
-          ),
-          ListTile(
-            title: Text("Payments"),
-            trailing: Icon(Icons.payment),
-            style: ListTileStyle.drawer,
-          ),
-          Divider(color: Colors.grey.shade500),
-          ListTile(
-            title: Text("Change Password"),
-            trailing: Icon(Icons.password),
-            style: ListTileStyle.drawer,
-            onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => ChangePassword()));
-            },
-          ),
-          Divider(color: Colors.grey.shade500),
-          ListTile(
-            title: Text("Address"),
-            trailing: Icon(Icons.house_siding_sharp),
-            style: ListTileStyle.drawer,
-          ),
-          Divider(color: Colors.grey.shade500),
-          ListTile(
-            title: Text("Other"),
-            trailing: Icon(Icons.arrow_forward),
-            style: ListTileStyle.drawer,
-          ),
-          Divider(color: Colors.grey.shade500),
-          ListTile(
-            onTap: () async {
-              if (FirebaseAuth.instance.currentUser != null) {
-                await _auth.signOut();
-              }
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: ((context) => LogIn())),
-                  (route) => false);
-            },
-            title: Text("Signout"),
-            trailing: Icon(Icons.logout),
-            style: ListTileStyle.drawer,
-          ),
-        ],
-      )),
+      drawer: SafeArea(
+        child: Drawer(
+            child: ListView(
+          children: [
+            UserAccountsDrawerHeader(
+              currentAccountPicture: CircleAvatar(
+                child: Text(
+                  currentUser!.displayName!.substring(0, 1).toUpperCase(),
+                  style: TextStyle(
+                      color: Colors.amber,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold),
+                ),
+                backgroundColor: Colors.white,
+              ),
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [Colors.amber, Colors.amberAccent])),
+              accountEmail: Text(currentUser!.email ?? "not found"),
+              accountName: Text(currentUser!.displayName ?? "not found"),
+            ),
+            const ListTile(
+              title: Text("Payments"),
+              leading: Icon(Icons.payment),
+              style: ListTileStyle.drawer,
+            ),
+            ListTile(
+              title: const Text("Change Password"),
+              leading: const Icon(Icons.password),
+              style: ListTileStyle.drawer,
+              onTap: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => ChangePassword()));
+              },
+            ),
+            const ListTile(
+              title: Text("Address"),
+              leading: Icon(Icons.apartment),
+              style: ListTileStyle.drawer,
+            ),
+            const ListTile(
+              title: Text("Other"),
+              leading: Icon(Icons.more_horiz),
+              style: ListTileStyle.drawer,
+            ),
+            ListTile(
+              onTap: () async {
+                showDialog(
+                    context: (context),
+                    builder: ((context) => DialogBox().dialogBox(context)));
+              },
+              title: const Text("Signout"),
+              leading: const Icon(Icons.logout),
+              style: ListTileStyle.drawer,
+            ),
+          ],
+        )),
+      ),
       body: _widgetslist[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: currentIndex,
@@ -97,17 +112,25 @@ class _DashboardState extends State<Dashboard> {
               currentIndex = index;
             });
           },
+          showUnselectedLabels: false,
+          showSelectedLabels: false,
+          unselectedItemColor: Colors.grey,
+          selectedIconTheme: IconThemeData(size: 35),
           fixedColor: Colors.amber,
-          iconSize: 30,
-          type: BottomNavigationBarType.fixed,
+          iconSize: 25,
+          type: BottomNavigationBarType.shifting,
           items: const [
             BottomNavigationBarItem(
                 icon: Icon(Icons.category), label: "Categories"),
-            BottomNavigationBarItem(icon: Icon(Icons.face), label: "Vendor"),
+            BottomNavigationBarItem(icon: Icon(Icons.people), label: "Vendor"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.home, size: 45), label: "Home"),
+                icon: Icon(
+                  Icons.home,
+                ),
+                label: "Home"),
             BottomNavigationBarItem(icon: Icon(Icons.list), label: "List"),
-            BottomNavigationBarItem(icon: Icon(Icons.more), label: "More"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.more_horiz), label: "More"),
           ]),
       appBar: AppBar(
         title: const Text("Dashboard"),

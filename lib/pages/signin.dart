@@ -39,9 +39,6 @@ class _SignInState extends State<SignIn> {
           padding: const EdgeInsets.only(left: 8, right: 8),
           child: TextFormField(
             autofocus: true,
-            textInputAction: isLastField == null
-                ? TextInputAction.next
-                : TextInputAction.done,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: validate,
             cursorColor: Colors.amber,
@@ -92,6 +89,9 @@ class _SignInState extends State<SignIn> {
                 style: TextStyle(color: Colors.grey.shade600, fontSize: 15),
               ),
             ),
+            textInputAction: isLastField == null
+                ? TextInputAction.next
+                : TextInputAction.done,
           ),
         ));
   }
@@ -200,9 +200,10 @@ class _SignInState extends State<SignIn> {
                       ElevatedButton(
                         onPressed: () async {
                           if (_formkey.currentState!.validate()) {
-                            final user = _auth.createNewAccount(
-                                _emailcontroller.text,
-                                _passwordcontroller.text);
+                            final user = await _auth.createNewAccount(
+                                email: _emailcontroller.text.trim(),
+                                password: _confirmpasswordcontroller.text,
+                                username: _usernamecontroller.text);
                             if (user != null) {
                               Navigator.pushReplacement(
                                   context,
