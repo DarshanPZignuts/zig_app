@@ -4,6 +4,9 @@ import 'package:zig_project/authentication/auth.dart';
 import 'package:zig_project/pages/dashboard.dart';
 import 'package:zig_project/pages/resetpassword.dart';
 import 'package:zig_project/pages/signin.dart';
+import 'package:zig_project/resources/assets_manager.dart';
+import 'package:zig_project/resources/colors_manager.dart';
+import 'package:zig_project/resources/string_manager.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -42,17 +45,17 @@ class _LogInState extends State<LogIn> {
               autofocus: true,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: validate,
-              cursorColor: Colors.amber,
+              cursorColor: ColorManager.primary,
               cursorHeight: 20,
-              style: TextStyle(color: Colors.amber),
+              style: TextStyle(color: ColorManager.primary),
               controller: controller,
               obscureText: obscureText,
               decoration: InputDecoration(
                 border: const UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.black),
                 ),
-                focusedBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.amber),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: ColorManager.primary),
                 ),
                 suffixIcon: isPassword
                     ? IconButton(
@@ -91,24 +94,21 @@ class _LogInState extends State<LogIn> {
             padding: EdgeInsets.only(top: height * 0.15),
             child: Column(
               children: [
-                Hero(
-                  tag: "icon",
-                  child: Image.asset(
-                    "lib/assets/itunes.png",
-                    height: 70,
-                    width: 70,
-                  ),
+                Image.asset(
+                  AssetsManager.splaceLogo,
+                  height: 70,
+                  width: 70,
                 ),
                 SizedBox(height: height * 0.1),
                 Text(
-                  "Login",
-                  style: TextStyle(color: Colors.amber, fontSize: 30),
+                  StringManager.loginTittle,
+                  style: TextStyle(color: ColorManager.primary, fontSize: 30),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Text(
-                  "Welcome back,",
+                  StringManager.loginSubTittle,
                   style: TextStyle(color: Colors.grey.shade500),
                 ),
                 SizedBox(
@@ -117,14 +117,14 @@ class _LogInState extends State<LogIn> {
                 Container(
                   child: Column(children: [
                     _buildInput(
-                        label: "Email",
+                        label: StringManager.emailLable,
                         obscureText: false,
                         isPassword: false,
                         validate: (String? val) {
                           if (val!.isEmpty || val == null) {
-                            return "Email should not be empty.";
+                            return StringManager.validateEmptyEmail;
                           } else if (!regemail.hasMatch(val)) {
-                            return "Please enter correct email address";
+                            return StringManager.validateEmail;
                           }
                         },
                         controller: _emailcontroller),
@@ -134,17 +134,17 @@ class _LogInState extends State<LogIn> {
                     _buildInput(
                         isLastField: true,
                         isPassword: true,
-                        label: "Password",
+                        label: StringManager.passwordLable,
                         obscureText: !showPassword,
                         validate: (String? val) {
                           if (val!.isEmpty || val == null) {
-                            return "Password should not be empty";
+                            return StringManager.validateEmptyPassword;
                           } else if (val.length <= 6) {
-                            return "Minimum 6 letter required";
+                            return StringManager.validatePasswordLength;
                           } else if (!RegExp(r"[a-zA-Z]").hasMatch(val)) {
-                            return "Atleast one alphabet character required";
+                            return StringManager.validatePasswordCharacter;
                           } else if (!RegExp(r"[0-9]").hasMatch(val)) {
-                            return "Atleast one number required";
+                            return StringManager.validatePasswordNumber;
                           }
                         },
                         controller: _passwordcontroller),
@@ -152,7 +152,7 @@ class _LogInState extends State<LogIn> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          "Forget Password?",
+                          StringManager.forgotPasswordText,
                           style: TextStyle(color: Colors.grey.shade600),
                         ),
                         Padding(
@@ -164,9 +164,9 @@ class _LogInState extends State<LogIn> {
                                     MaterialPageRoute(
                                         builder: (context) => ResetPassword()));
                               },
-                              child: const Text(
-                                "RESET",
-                                style: TextStyle(color: Colors.amber),
+                              child: Text(
+                                StringManager.resetButtonText,
+                                style: TextStyle(color: ColorManager.primary),
                               )),
                         ),
                         const SizedBox(
@@ -187,7 +187,7 @@ class _LogInState extends State<LogIn> {
 
                           final user = await _auth.logInwithEmailandpassword(
                               _emailcontroller.text, _passwordcontroller.text);
-
+//todo
                           if (user == "success") {
                             Navigator.pushReplacement(
                                 context,
@@ -204,7 +204,7 @@ class _LogInState extends State<LogIn> {
                       },
                       style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all(Colors.amber),
+                            MaterialStateProperty.all(ColorManager.primary),
                         fixedSize: MaterialStatePropertyAll(
                             Size(width * 0.6, height * 0.02)),
                       ),
@@ -216,7 +216,7 @@ class _LogInState extends State<LogIn> {
                               ),
                             )
                           : const Text(
-                              "LOGIN",
+                              StringManager.loginButtonText,
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w400),
                             ),
@@ -225,7 +225,7 @@ class _LogInState extends State<LogIn> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Don't have account?",
+                          StringManager.dontHaveAccountText,
                           style: TextStyle(color: Colors.grey.shade500),
                         ),
                         TextButton(
@@ -234,9 +234,9 @@ class _LogInState extends State<LogIn> {
                                   MaterialPageRoute(
                                       builder: ((context) => SignIn())));
                             },
-                            child: const Text(
-                              "Create Account",
-                              style: TextStyle(color: Colors.amber),
+                            child: Text(
+                              StringManager.loginCreateAccountButton,
+                              style: TextStyle(color: ColorManager.primary),
                             ))
                       ],
                     )

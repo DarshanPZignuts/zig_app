@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:zig_project/authentication/auth.dart';
 import 'package:zig_project/pages/Other/dialog_box.dart';
 import 'package:zig_project/pages/change_password.dart';
+import 'package:zig_project/pages/dashboard_pages/categories.dart';
 import 'package:zig_project/pages/login.dart';
+import 'package:zig_project/resources/colors_manager.dart';
+import 'package:zig_project/resources/string_manager.dart';
 // ignore: implementation_imports
 
 class Dashboard extends StatefulWidget {
@@ -27,83 +30,84 @@ class _DashboardState extends State<Dashboard> {
 
   static const List<Widget> _widgetslist = [
     Center(
-      child: Text("This is Categories Page"),
+      child: Text(StringManager.homePageContent),
     ),
     Center(
-      child: Text("This is Vendors Page"),
+      child: Text(StringManager.vendorPageContent),
     ),
     Center(
-      child: Text("This is Home Pages"),
+      child: Text(StringManager.listPageContent),
     ),
+    Categories(),
     Center(
-      child: Text("This is  List Page"),
-    ),
-    Center(
-      child: Text("This is More Page"),
+      child: Text(StringManager.morePageContent),
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: SafeArea(
-        child: Drawer(
-            child: ListView(
-          children: [
-            UserAccountsDrawerHeader(
-              currentAccountPicture: CircleAvatar(
-                child: Text(
-                  currentUser!.displayName!.substring(0, 1).toUpperCase(),
-                  style: TextStyle(
-                      color: Colors.amber,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold),
-                ),
-                backgroundColor: Colors.white,
-              ),
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [Colors.amber, Colors.amberAccent])),
-              accountEmail: Text(currentUser!.email ?? "not found"),
-              accountName: Text(currentUser!.displayName ?? "not found"),
-            ),
-            const ListTile(
-              title: Text("Payments"),
-              leading: Icon(Icons.payment),
-              style: ListTileStyle.drawer,
-            ),
-            ListTile(
-              title: const Text("Change Password"),
-              leading: const Icon(Icons.password),
-              style: ListTileStyle.drawer,
-              onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => ChangePassword()));
-              },
-            ),
-            const ListTile(
-              title: Text("Address"),
-              leading: Icon(Icons.apartment),
-              style: ListTileStyle.drawer,
-            ),
-            const ListTile(
-              title: Text("Other"),
-              leading: Icon(Icons.more_horiz),
-              style: ListTileStyle.drawer,
-            ),
-            ListTile(
-              onTap: () async {
-                showDialog(
-                    context: (context),
-                    builder: ((context) => DialogBox().dialogBox(context)));
-              },
-              title: const Text("Signout"),
-              leading: const Icon(Icons.logout),
-              style: ListTileStyle.drawer,
-            ),
-          ],
-        )),
-      ),
+      //  drawer: SafeArea(
+      //   child: Drawer(
+      //       child: ListView(
+      //     children: [
+      //       UserAccountsDrawerHeader(
+      //         currentAccountPicture: CircleAvatar(
+      //           child: Text(
+      //             currentUser!.displayName!.substring(0, 1).toUpperCase(),
+      //             style: TextStyle(
+      //                 color: ColorManager.primary,
+      //                 fontSize: 28,
+      //                 fontWeight: FontWeight.bold),
+      //           ),
+      //           backgroundColor: Colors.white,
+      //         ),
+      //         decoration: BoxDecoration(color: ColorManager.primary),
+      //         accountEmail:
+      //             Text(currentUser!.email ?? StringManager.dashboardEmailError),
+      //         accountName: Text(
+      //             currentUser!.displayName ?? StringManager.dashboardNameError),
+      //       ),
+      //       const ListTile(
+      //         title: Text(StringManager.dashboardListTilePayments),
+      //         leading: Icon(Icons.payment),
+      //         style: ListTileStyle.drawer,
+      //       ),
+      //       ListTile(
+      //         title: const Text(StringManager.dashboardListTileChangePassword),
+      //         leading: const Icon(Icons.password),
+      //         style: ListTileStyle.drawer,
+      //         onTap: () {
+      //           Navigator.of(context).push(
+      //               MaterialPageRoute(builder: (context) => ChangePassword()));
+      //         },
+      //       ),
+      //       const ListTile(
+      //         title: Text(StringManager.dashboardListTileAddress),
+      //         leading: Icon(Icons.apartment),
+      //         style: ListTileStyle.drawer,
+      //       ),
+      //       const ListTile(
+      //         title: Text(StringManager.dashboardListTileOther),
+      //         leading: Icon(Icons.more_horiz),
+      //         style: ListTileStyle.drawer,
+      //       ),
+      //       ListTile(
+      //         onTap: () async {
+      //           showDialog(
+      //               context: (context),
+      //               builder: ((context) => DialogBox().dialogBox(context)));
+      //         },
+      //         title: const Text(
+      //           StringManager.dashboardListTileSignOut,
+      //           style: TextStyle(color: Colors.redAccent),
+      //         ),
+      //         leading: const Icon(Icons.logout),
+      //         style: ListTileStyle.drawer,
+      //       ),
+      //     ],
+      //   )),
+      // ),
       body: _widgetslist[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: currentIndex,
@@ -114,29 +118,49 @@ class _DashboardState extends State<Dashboard> {
           },
           showUnselectedLabels: false,
           showSelectedLabels: false,
-          unselectedItemColor: Colors.grey,
+          unselectedItemColor: ColorManager.primary,
           selectedIconTheme: IconThemeData(size: 35),
-          fixedColor: Colors.amber,
+          fixedColor: ColorManager.secondary,
           iconSize: 25,
           type: BottomNavigationBarType.shifting,
           items: const [
             BottomNavigationBarItem(
-                icon: Icon(Icons.category), label: "Categories"),
-            BottomNavigationBarItem(icon: Icon(Icons.people), label: "Vendor"),
+              label: StringManager.dashboardBottomNavHome,
+              icon: Icon(
+                Icons.home,
+              ),
+            ),
+
+            //Vendor
             BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home,
-                ),
-                label: "Home"),
-            BottomNavigationBarItem(icon: Icon(Icons.list), label: "List"),
+              label: StringManager.dashboardBottomNavVendors,
+              icon: Icon(Icons.people),
+            ),
+            //Home
+
+            //label: "List"
             BottomNavigationBarItem(
-                icon: Icon(Icons.more_horiz), label: "More"),
+              label: StringManager.dashboardBottomNavList,
+              icon: Icon(Icons.list),
+            ),
+            //Categories
+            BottomNavigationBarItem(
+              label: StringManager.dashboardBottomNavCategory,
+              icon: Icon(Icons.category),
+            ),
+
+            //label: "More"
+
+            BottomNavigationBarItem(
+              label: StringManager.dashboardBottomNavMore,
+              icon: Icon(Icons.more_horiz),
+            ),
           ]),
-      appBar: AppBar(
-        title: const Text("Dashboard"),
-        centerTitle: true,
-        backgroundColor: Colors.amber,
-      ),
+      // appBar: AppBar(
+      //   title: const Text(StringManager.dashboardAppBarTittle),
+      //   centerTitle: true,
+      //   backgroundColor: ColorManager.primary,
+      // ),
     );
   }
 }

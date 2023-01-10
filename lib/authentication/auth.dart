@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:zig_project/resources/string_manager.dart';
 
 class Auth {
   final _firebaseAuth = FirebaseAuth.instance;
@@ -20,15 +21,16 @@ class Auth {
       User? user = await usercredential.user;
       await user?.updateDisplayName(username);
       if (user != null) {
+        //todo
         return "success";
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'network-request-failed') {
-        return 'No Internet Connection';
+        return StringManager.networkReqFailed;
       } else if (e.code == 'weak-password') {
-        return 'The password provided is too weak.';
+        return StringManager.weakPassword;
       } else if (e.code == 'email-already-in-use') {
-        return 'The account already exists for this email.';
+        return StringManager.emailAlreadyUse;
       }
     } catch (e) {
       return e.toString();
@@ -48,11 +50,11 @@ class Auth {
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'network-request-failed') {
-        return 'No Internet Connection';
+        return StringManager.networkReqFailed;
       } else if (e.code == 'user-not-found') {
-        return 'No user found for this email.';
+        return StringManager.userNotFound;
       } else if (e.code == 'wrong-password') {
-        return 'Wrong password provided for this user.';
+        return StringManager.wrongPassword;
       }
     } catch (e) {
       return e.toString();
@@ -67,7 +69,7 @@ class Auth {
       return "success";
     } on FirebaseAuthException catch (e) {
       if (e.code == 'network-request-failed') {
-        return 'No Internet Connection';
+        return StringManager.networkReqFailed;
       }
     } catch (e) {
       return e.toString();

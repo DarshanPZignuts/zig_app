@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zig_project/pages/dashboard.dart';
 import 'package:zig_project/pages/login.dart';
+import 'package:zig_project/resources/assets_manager.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -33,16 +34,13 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Center(
-            child: Hero(
-          tag: "icon",
-          child: Image.asset(
-            "lib/assets/itunes.png",
-            height: 200,
-            width: 200,
-          ),
-        )),
-      ),
+          child: Center(
+        child: Image.asset(
+          AssetsManager.splaceLogo,
+          height: 200,
+          width: 200,
+        ),
+      )),
     );
   }
 }

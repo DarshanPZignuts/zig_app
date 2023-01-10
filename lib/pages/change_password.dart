@@ -5,6 +5,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:zig_project/authentication/auth.dart';
 import 'package:zig_project/pages/dashboard.dart';
 import 'package:zig_project/pages/login.dart';
+import 'package:zig_project/resources/colors_manager.dart';
+import 'package:zig_project/resources/string_manager.dart';
 
 class ChangePassword extends StatefulWidget {
   ChangePassword({super.key});
@@ -34,14 +36,14 @@ class _ChangePasswordState extends State<ChangePassword> {
         child: Container(
           child: Column(children: [
             Text(
-              "Change Password",
-              style: TextStyle(color: Colors.amber, fontSize: 30),
+              StringManager.changePasswordTitle,
+              style: TextStyle(color: ColorManager.primary, fontSize: 30),
             ),
             SizedBox(
               height: 20,
             ),
             Text(
-              "Enter a new password",
+              StringManager.changePasswordSubTitle,
               style: TextStyle(color: Colors.grey.shade500),
             ),
             SizedBox(
@@ -55,13 +57,13 @@ class _ChangePasswordState extends State<ChangePassword> {
                   controller: _passwordController,
                   validator: (String? val) {
                     if (val!.isEmpty) {
-                      return "Password should not be empty";
+                      return StringManager.validateEmptyPassword;
                     } else if (val.length < 6) {
-                      return "Length should be greater or equal to 6 character";
+                      return StringManager.validatePasswordLength;
                     } else if (!RegExp(r"[a-zA-Z]").hasMatch(val)) {
-                      return "Please use characters";
+                      return StringManager.validatePasswordCharacter;
                     } else if (!RegExp(r"[0-9]").hasMatch(val)) {
-                      return "Please use Numbers";
+                      return StringManager.validatePasswordNumber;
                     }
                   },
                   obscureText: !showPassword,
@@ -76,9 +78,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                   controller: _confirmPasswordController,
                   validator: (String? val) {
                     if (val!.isEmpty) {
-                      return "Please confirm the password";
+                      return StringManager.validateEmptyPassword;
                     } else if (!(val == _passwordController.text)) {
-                      return "Password not matched";
+                      return StringManager.validateConfirmPasswordMatch;
                     }
                   },
                   obscureText: !showConfirmPassword,
@@ -98,9 +100,11 @@ class _ChangePasswordState extends State<ChangePassword> {
                 final message = await _auth
                     .changePassword(_confirmPasswordController.text.trim());
                 if (message != null) {
+                  //todo
                   if (message == "success") {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("Password successfully changed.")));
+                        content:
+                            Text(StringManager.changePasswordSnackbarText)));
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: ((context) => Dashboard())));
                   } else {
@@ -108,16 +112,18 @@ class _ChangePasswordState extends State<ChangePassword> {
                         .showSnackBar(SnackBar(content: Text(message)));
                   }
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Something went wrong!!")));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content:
+                          Text(StringManager.changePasswordErrorSnackbarText)));
                 }
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.amber),
+                backgroundColor:
+                    MaterialStateProperty.all(ColorManager.primary),
                 fixedSize: const MaterialStatePropertyAll(Size(200, 40)),
               ),
               child: const Text(
-                "Change Password",
+                StringManager.changePasswordButtonText,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
               ),
             ),
@@ -135,11 +141,11 @@ class _ChangePasswordState extends State<ChangePassword> {
       border: const UnderlineInputBorder(
         borderSide: BorderSide(color: Colors.black),
       ),
-      focusedBorder: const UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.amber),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: ColorManager.primary),
       ),
       label: Text(lable),
-      floatingLabelStyle: TextStyle(color: Colors.amber),
+      floatingLabelStyle: TextStyle(color: ColorManager.primary),
       suffixIcon: InkWell(
           onTap: () {
             if (isConfirmPassword == null) {
@@ -168,7 +174,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   : showConfirmPassword
                       ? Icons.visibility_off
                       : Icons.visibility,
-              color: Colors.amber)),
+              color: ColorManager.primary)),
     );
   }
 }

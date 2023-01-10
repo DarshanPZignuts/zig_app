@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:zig_project/pages/login.dart';
+import 'package:zig_project/resources/colors_manager.dart';
+import 'package:zig_project/resources/string_manager.dart';
 
 class ResetPassword extends StatelessWidget {
   ResetPassword({super.key});
@@ -25,14 +27,14 @@ class ResetPassword extends StatelessWidget {
         child: Container(
           child: Column(children: [
             Text(
-              "Reset Password",
-              style: TextStyle(color: Colors.amber, fontSize: 30),
+              StringManager.resetPasswordTittle,
+              style: TextStyle(color: ColorManager.primary, fontSize: 30),
             ),
             SizedBox(
               height: 20,
             ),
             Text(
-              "Password reset link will be sent to user inputted email",
+              StringManager.resetPasswordSubTittle,
               style: TextStyle(color: Colors.grey.shade500),
             ),
             SizedBox(
@@ -42,13 +44,13 @@ class ResetPassword extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.04,
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: _buildInput(
-                  label: "Email",
+                  label: StringManager.emailLable,
                   controller: _emailController,
                   validate: (String? val) {
                     if (val!.isEmpty || val == null) {
-                      return "Email should not be empty.";
+                      return StringManager.validateEmptyEmail;
                     } else if (!regemail.hasMatch(val)) {
-                      return "Please enter Valid email address";
+                      return StringManager.validateEmail;
                     }
                   },
                 )),
@@ -63,22 +65,23 @@ class ResetPassword extends StatelessWidget {
 
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content:
-                          Text("Reset link successfully sent to your email.")));
+                          Text(StringManager.resetPasswordSuccessSnackbar)));
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => LogIn()));
                 } on FirebaseAuthException catch (e) {
                   if (e.code == "user-not-found") {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Email id is not registerd")));
+                        SnackBar(content: Text(StringManager.userNotFound)));
                   }
                 }
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.amber),
+                backgroundColor:
+                    MaterialStateProperty.all(ColorManager.primary),
                 fixedSize: const MaterialStatePropertyAll(Size(200, 40)),
               ),
               child: const Text(
-                "SEND LINK",
+                StringManager.sendLinkButtonText,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
               ),
             ),
@@ -103,16 +106,16 @@ class ResetPassword extends StatelessWidget {
               autofocus: true,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: validate,
-              cursorColor: Colors.amber,
+              cursorColor: ColorManager.primary,
               cursorHeight: 20,
-              style: TextStyle(color: Colors.amber),
+              style: TextStyle(color: ColorManager.primary),
               controller: controller,
               //DECORATION...
               decoration: InputDecoration(
-                hintText: "Email",
+                hintText: StringManager.emailHintText,
                 floatingLabelBehavior: FloatingLabelBehavior.never,
-                focusedBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.amber),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: ColorManager.primary),
                 ),
               ),
             )));

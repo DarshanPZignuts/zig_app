@@ -2,14 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zig_project/authentication/auth.dart';
 import 'package:zig_project/pages/login.dart';
+import 'package:zig_project/resources/colors_manager.dart';
+import 'package:zig_project/resources/string_manager.dart';
 
 class DialogBox {
   Auth _auth = Auth();
 
   Widget dialogBox(BuildContext context) {
     return AlertDialog(
-      title: Text("Please Confirm!"),
-      content: Text("Are sure to sign out from account?"),
+      title: Text(StringManager.alertBoxTittle),
+      content: Text(StringManager.alertBoxDescription),
       actions: [
         TextButton(
             onPressed: () async {
@@ -23,7 +25,7 @@ class DialogBox {
             },
             child: Text(
               "Yes",
-              style: TextStyle(color: Colors.amber, fontSize: 18),
+              style: TextStyle(color: ColorManager.primary, fontSize: 18),
             )),
         TextButton(
             onPressed: () {
