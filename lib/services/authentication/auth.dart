@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:zig_project/model/app_user.dart';
 import 'package:zig_project/resources/string_manager.dart';
 
 class Auth {
@@ -22,6 +23,7 @@ class Auth {
       await user?.updateDisplayName(username);
       if (user != null) {
         //todo
+
         return "success";
       }
     } on FirebaseAuthException catch (e) {

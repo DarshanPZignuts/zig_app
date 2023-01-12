@@ -1,12 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:zig_project/authentication/auth.dart';
-import 'package:zig_project/pages/Other/dialog_box.dart';
-import 'package:zig_project/pages/change_password.dart';
-import 'package:zig_project/pages/dashboard_pages/categories.dart';
-import 'package:zig_project/pages/login.dart';
+import 'package:zig_project/services/authentication/auth.dart';
+import 'package:zig_project/ui/dialogs/dialog_box.dart';
+import 'package:zig_project/ui/screens/dashboard/change_password.dart';
+import 'package:zig_project/ui/screens/categories/categories_screen.dart';
+
+import 'package:zig_project/ui/screens/login/login.dart';
 import 'package:zig_project/resources/colors_manager.dart';
 import 'package:zig_project/resources/string_manager.dart';
+
+import '../loyalty_card/Loyalty_cards.dart';
 // ignore: implementation_imports
 
 class Dashboard extends StatefulWidget {
@@ -39,9 +42,7 @@ class _DashboardState extends State<Dashboard> {
       child: Text(StringManager.listPageContent),
     ),
     Categories(),
-    Center(
-      child: Text(StringManager.morePageContent),
-    ),
+    LoyaltyCards()
   ];
 
   @override

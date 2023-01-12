@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:zig_project/authentication/auth.dart';
-import 'package:zig_project/pages/dashboard.dart';
-import 'package:zig_project/pages/login.dart';
+import 'package:zig_project/services/authentication/auth.dart';
+import 'package:zig_project/ui/screens/dashboard/dashboard.dart';
+import 'package:zig_project/ui/screens/login/login.dart';
 import 'package:zig_project/resources/colors_manager.dart';
 import 'package:zig_project/resources/string_manager.dart';
 

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:zig_project/pages/dashboard.dart';
-import 'package:zig_project/pages/login.dart';
+import 'package:zig_project/ui/screens/dashboard/dashboard.dart';
+import 'package:zig_project/ui/screens/login/login.dart';
 import 'package:zig_project/resources/assets_manager.dart';
 
 class SplashScreen extends StatefulWidget {

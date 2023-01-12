@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:zig_project/authentication/auth.dart';
-import 'package:zig_project/pages/dashboard.dart';
-import 'package:zig_project/pages/resetpassword.dart';
-import 'package:zig_project/pages/signin.dart';
+import 'package:zig_project/services/authentication/auth.dart';
+import 'package:zig_project/ui/screens/dashboard/dashboard.dart';
+import 'package:zig_project/ui/screens/login/reset_password.dart';
+import 'package:zig_project/ui/screens/signup/signin.dart';
 import 'package:zig_project/resources/assets_manager.dart';
 import 'package:zig_project/resources/colors_manager.dart';
 import 'package:zig_project/resources/string_manager.dart';

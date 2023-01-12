@@ -1,17 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:zig_project/authentication/auth.dart';
-import 'package:zig_project/pages/login.dart';
+import 'package:zig_project/services/authentication/auth.dart';
+import 'package:zig_project/ui/screens/login/login.dart';
 import 'package:zig_project/resources/colors_manager.dart';
 import 'package:zig_project/resources/string_manager.dart';
 
 class DialogBox {
-  Auth _auth = Auth();
+  final Auth _auth = Auth();
 
   Widget dialogBox(BuildContext context) {
     return AlertDialog(
-      title: Text(StringManager.alertBoxTittle),
-      content: Text(StringManager.alertBoxDescription),
+      title: const Text(StringManager.alertBoxTittle),
+      content: const Text(StringManager.alertBoxDescription),
       actions: [
         TextButton(
             onPressed: () async {
@@ -20,7 +20,7 @@ class DialogBox {
               }
               Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: ((context) => LogIn())),
+                  MaterialPageRoute(builder: ((context) => const LogIn())),
                   (route) => false);
             },
             child: Text(
@@ -31,7 +31,7 @@ class DialogBox {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text(
+            child: const Text(
               "No",
               style: TextStyle(color: Colors.grey, fontSize: 18),
             )),

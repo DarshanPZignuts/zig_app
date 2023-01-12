@@ -21,11 +21,13 @@ class _CategoriesState extends State<Categories> {
   bool isFavoriteCategory = true;
   bool isListView = true;
   ScrollController _scrollController = ScrollController();
+  ScrollController _scrollController2 = ScrollController();
   List categoryList = [
     "Home & Kitchen",
     "Drinks",
     "Home & Kitchen",
     "Drinks",
+    "Add",
     "Home & Kitchen",
     "Drinks",
     "Home & Kitchen",
@@ -35,7 +37,21 @@ class _CategoriesState extends State<Categories> {
     "Drinks",
     "Fruits & Vegetables",
     "Meat products",
-    "Fizzi drinks"
+    "Fizzi drinks",
+    "Drinks",
+    "Fruits & Vegetables",
+    "Meat products",
+    "Fizzi drinks",
+  ];
+  List imageList = [
+    AssetsManager.drinkImage,
+    AssetsManager.vegetableImage,
+    AssetsManager.meatImage,
+    AssetsManager.fizzyDrinkImage,
+    AssetsManager.drinkImage,
+    AssetsManager.vegetableImage,
+    AssetsManager.meatImage,
+    AssetsManager.fizzyDrinkImage,
   ];
   List list = [
     "Vendor 1",
@@ -82,8 +98,7 @@ class _CategoriesState extends State<Categories> {
             ),
             _buildWidget1(),
             _selectVendor(),
-            //_listView()
-            _gridView()
+            isListView ? _listView() : _gridView()
           ],
         ),
       ),
@@ -100,7 +115,7 @@ class _CategoriesState extends State<Categories> {
               onTap: () {
                 setState(() {
                   if (isFavoriteCategory)
-                    isFavoriteCategory = false;
+                    ;
                   else
                     isFavoriteCategory = true;
                 });
@@ -128,10 +143,7 @@ class _CategoriesState extends State<Categories> {
             InkWell(
               onTap: () {
                 setState(() {
-                  if (isFavoriteCategory)
-                    isFavoriteCategory = false;
-                  else
-                    isFavoriteCategory = true;
+                  if (isFavoriteCategory) isFavoriteCategory = false;
                 });
               },
               child: Container(
@@ -161,7 +173,7 @@ class _CategoriesState extends State<Categories> {
           onTap: () {
             setState(() {
               if (isListView)
-                isListView = false;
+                ;
               else
                 isListView = true;
             });
@@ -187,7 +199,7 @@ class _CategoriesState extends State<Categories> {
                 if (isListView)
                   isListView = false;
                 else
-                  isListView = true;
+                  ;
               });
             },
             child: Container(
@@ -220,8 +232,8 @@ class _CategoriesState extends State<Categories> {
                 color: ColorManager.primary, fontSize: AppPadding.p16),
           ),
           disabledHint: Text("Select Vendors"),
-          elevation: 0,
-
+          elevation: 10,
+          borderRadius: BorderRadius.circular(10),
           // value: selectedValue,
           icon: Icon(
             Icons.arrow_drop_down,
@@ -231,7 +243,6 @@ class _CategoriesState extends State<Categories> {
             setState(() {
               selectedValue = value!;
             });
-            // This is called when the user selects an item.
           },
           items: list.map<DropdownMenuItem>((value) {
             return DropdownMenuItem(
@@ -247,6 +258,8 @@ class _CategoriesState extends State<Categories> {
   Widget _listView() {
     return Container(
       child: ListView.builder(
+          physics:
+              BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           controller: _scrollController,
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
@@ -272,21 +285,16 @@ class _CategoriesState extends State<Categories> {
   Widget _gridView() {
     return Container(
       child: ListView.builder(
-          controller: _scrollController,
+          controller: _scrollController2,
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
           itemCount: categoryList.length,
           itemBuilder: ((context, index) {
             if (index == 4) {
-              return Column(
-                children: [
-                  _advertisement(),
-                ],
-              );
+              return _advertisement();
             } else {
               return Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                      AppPadding.p20, 5, AppPadding.p20, 5),
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                   child: _customGrid(categoryList[index]));
             }
           })),
@@ -363,43 +371,64 @@ class _CategoriesState extends State<Categories> {
   Widget _customGrid(String tittle) {
     return Container(
       child: Column(children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              tittle,
-              style: TextStyle(
-                  fontSize: AppSize.s18,
-                  color: ColorManager.primary,
-                  fontWeight: FontWeight.bold),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                      right: AppPadding.p8, left: AppPadding.p8),
-                  child: Image.asset(AssetsManager.percentTag),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      right: AppPadding.p8, left: AppPadding.p8),
-                  child: Icon(
-                    Icons.favorite,
-                    color: ColorManager.secondary,
+        Padding(
+          padding: const EdgeInsets.only(
+              left: AppPadding.p20, right: AppPadding.p20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                tittle,
+                style: TextStyle(
+                    fontSize: AppSize.s18,
+                    color: ColorManager.primary,
+                    fontWeight: FontWeight.bold),
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        right: AppPadding.p8, left: AppPadding.p8),
+                    child: Image.asset(AssetsManager.percentTag),
                   ),
-                )
-              ],
-            ),
-          ],
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        right: AppPadding.p8, left: AppPadding.p8),
+                    child: Icon(
+                      Icons.favorite,
+                      color: ColorManager.secondary,
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
         Container(
           width: MediaQuery.of(context).size.width,
           height: 135,
           child: ListView.builder(
-              itemCount: subCategoryList.length,
+              shrinkWrap: true,
+              physics: BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
+              itemCount: subCategoryList.length + 1,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
-                return _grid(subCategoryList[index], AssetsManager.drinkImage);
+                if (index == subCategoryList.length) {
+                  return Container(
+                    height: 110,
+                    width: 80,
+                    child: Center(
+                        child: Text(
+                      "More>>",
+                      style: TextStyle(
+                          color: ColorManager.primary,
+                          fontWeight: FontWeightManager.bold,
+                          fontSize: FontSize.s18),
+                    )),
+                  );
+                }
+                return _grid(subCategoryList[index], imageList[index]);
               }),
         ),
       ]),
@@ -424,7 +453,14 @@ class _CategoriesState extends State<Categories> {
             height: 80,
             width: 80,
           ),
-          Text(tittle)
+          SizedBox(
+            height: 5,
+          ),
+          Expanded(
+            child: Text(tittle,
+                style: getRegularStyle(
+                    color: ColorManager.darkGrey, fontSize: 14)),
+          ),
         ]),
       ),
     );
