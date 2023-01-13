@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:zig_project/main.dart';
 import 'package:zig_project/resources/assets_manager.dart';
 import 'package:zig_project/resources/colors_manager.dart';
 import 'package:zig_project/resources/fonts_manager.dart';
 import 'package:zig_project/resources/string_manager.dart';
 import 'package:zig_project/resources/style_manager.dart';
 import 'package:zig_project/resources/value_manager.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:zig_project/ui/screens/categories/categories_utilities.dart';
+import 'package:zig_project/ui/widgets/common_widgets.dart';
 
 class Categories extends StatefulWidget {
   const Categories({super.key});
@@ -53,7 +51,7 @@ class _CategoriesState extends State<Categories> {
     AssetsManager.meatImage,
     AssetsManager.fizzyDrinkImage,
   ];
-  List list = [
+  List vendorList = [
     "Vendor 1",
     "Vendor 2",
     "Vendor 3",
@@ -97,7 +95,14 @@ class _CategoriesState extends State<Categories> {
               height: 10,
             ),
             _buildWidget1(),
-            _selectVendor(),
+            Categoriesutilities.selectVendor(
+                hintText: "Select endor",
+                onChanged: (p0) {
+                  setState(() {
+                    selectedValue = p0;
+                  });
+                },
+                vendorList: vendorList),
             isListView ? _listView() : _gridView()
           ],
         ),
@@ -220,41 +225,6 @@ class _CategoriesState extends State<Categories> {
     );
   }
 
-  Widget _selectVendor() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Padding(
-        padding: const EdgeInsets.only(left: AppPadding.p20),
-        child: DropdownButton(
-          hint: Text(
-            "Select Vendors",
-            style: getRegularStyle(
-                color: ColorManager.primary, fontSize: AppPadding.p16),
-          ),
-          disabledHint: Text("Select Vendors"),
-          elevation: 10,
-          borderRadius: BorderRadius.circular(10),
-          // value: selectedValue,
-          icon: Icon(
-            Icons.arrow_drop_down,
-            color: ColorManager.primary,
-          ),
-          onChanged: (value) {
-            setState(() {
-              selectedValue = value!;
-            });
-          },
-          items: list.map<DropdownMenuItem>((value) {
-            return DropdownMenuItem(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-
   Widget _listView() {
     return Container(
       child: ListView.builder(
@@ -266,16 +236,12 @@ class _CategoriesState extends State<Categories> {
           itemCount: categoryList.length,
           itemBuilder: ((context, index) {
             if (index == 4) {
-              return Column(
-                children: [
-                  _advertisement(),
-                ],
-              );
+              return CommonWidgets.advertisement(context);
             } else {
               return Padding(
                   padding: const EdgeInsets.fromLTRB(
                       AppPadding.p20, 5, AppPadding.p20, 5),
-                  child: _customTile(
+                  child: Categoriesutilities.customTile(
                       categoryList[index], AssetsManager.fruitImage));
             }
           })),
@@ -291,80 +257,13 @@ class _CategoriesState extends State<Categories> {
           itemCount: categoryList.length,
           itemBuilder: ((context, index) {
             if (index == 4) {
-              return _advertisement();
+              return CommonWidgets.advertisement(context);
             } else {
               return Padding(
                   padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                   child: _customGrid(categoryList[index]));
             }
           })),
-    );
-  }
-
-  Widget _customTile(String tittle, String image) {
-    return Container(
-      height: 50,
-      width: 335,
-      decoration: BoxDecoration(
-          color: ColorManager.white,
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 1,
-              color: ColorManager.grey,
-            )
-          ]),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Row(
-          children: [
-            Container(
-              height: 50,
-              width: 50,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                bottomLeft: Radius.circular(10),
-              )),
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
-                ),
-                child: Image.asset(
-                  image,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            SizedBox(
-              width: AppSize.s14,
-            ),
-            Text(
-              tittle,
-              style: TextStyle(fontSize: 16, color: ColorManager.primary),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  right: AppPadding.p8, left: AppPadding.p8),
-              child: Image.asset(AssetsManager.percentTag),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: AppPadding.p8, right: AppPadding.p8),
-              child: Icon(
-                Icons.favorite,
-                color: ColorManager.secondary,
-              ),
-            )
-          ],
-        )
-      ]),
     );
   }
 
@@ -416,6 +315,7 @@ class _CategoriesState extends State<Categories> {
               itemBuilder: (context, index) {
                 if (index == subCategoryList.length) {
                   return Container(
+                    padding: EdgeInsets.only(bottom: 25),
                     height: 110,
                     width: 80,
                     child: Center(
@@ -428,65 +328,11 @@ class _CategoriesState extends State<Categories> {
                     )),
                   );
                 }
-                return _grid(subCategoryList[index], imageList[index]);
+                return Categoriesutilities.subCategoryCard(
+                    tittle: subCategoryList[index], imgPath: imageList[index]);
               }),
         ),
       ]),
-    );
-  }
-
-  Widget _grid(String tittle, String imgPath) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 110,
-        width: 80,
-        child: Column(children: [
-          Container(
-            child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                child: Image.asset(imgPath, fit: BoxFit.cover)),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.amber,
-            ),
-            height: 80,
-            width: 80,
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Expanded(
-            child: Text(tittle,
-                style: getRegularStyle(
-                    color: ColorManager.darkGrey, fontSize: 14)),
-          ),
-        ]),
-      ),
-    );
-  }
-
-  Widget _advertisement() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.2,
-      child: CarouselSlider(
-        items: [AssetsManager.drinkImage, AssetsManager.fruitImage].map((e) {
-          return Builder(builder: ((context) {
-            return Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.2,
-                child: Image.asset(
-                  '$e',
-                  fit: BoxFit.cover,
-                ));
-          }));
-        }).toList(),
-        options: CarouselOptions(
-          viewportFraction: 1,
-          autoPlay: true,
-        ),
-      ),
     );
   }
 }

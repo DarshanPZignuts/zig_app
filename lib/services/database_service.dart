@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:zig_project/model/app_user.dart';
+import 'package:zig_project/model/model_loyalty_card.dart';
 import 'package:zig_project/services/authentication/auth.dart';
 import 'package:zig_project/resources/value_manager.dart';
 
@@ -16,6 +17,27 @@ class DatabaseService {
         .snapshots();
   }
 
+  deletCard(ModelLoayltyCard modelLoayltyCard) async {
+    await _firebaseFirestore
+        .collection("cardsOfUser")
+        .doc(await _auth.getUser()?.uid)
+        .update({
+          "loyaltyCards": FieldValue.arrayRemove([
+            {
+              "cardName": modelLoayltyCard.cardName,
+              "vendor": modelLoayltyCard.vendor,
+              "programmeName": modelLoayltyCard.programmeName,
+              "webURL": modelLoayltyCard.webURL,
+              "note": modelLoayltyCard.note,
+              "cardFrontURL": modelLoayltyCard.cardFrontURL,
+              "cardBackURL": modelLoayltyCard.cardBackURL
+            },
+          ])
+        })
+        .whenComplete(() => print("Success"))
+        .onError((error, stackTrace) => {print(error.toString())});
+  }
+
   saveCardDetails(
       {required String cardName,
       required String vendor,
@@ -26,23 +48,38 @@ class DatabaseService {
       required String cardBackURL,
       required Function onSuccess,
       required Function(String) onError}) async {
-    await _firebaseFirestore
+    DocumentReference reference = _firebaseFirestore
         .collection("cardsOfUser")
-        .doc(await _auth.getUser()?.uid)
-        .update({
-          "loyaltyCards": FieldValue.arrayUnion([
-            {
-              "cardName": cardName,
-              "vendor": vendor,
-              "programmeName": programmeName,
-              "webURL": webURL,
-              "note": note,
-              "cardFrontURL": cardFrontURL,
-              "cardBackURL": cardBackURL
-            },
-          ])
-        })
-        .then((value) => {onSuccess()})
-        .catchError((e) => {onError(e.toString())});
+        .doc(await _auth.getUser()?.uid);
+    final data = await reference.get();
+    if (data.exists) {
+      reference.update({
+        "loyaltyCards": FieldValue.arrayUnion([
+          {
+            "cardName": cardName,
+            "vendor": vendor,
+            "programmeName": programmeName,
+            "webURL": webURL,
+            "note": note,
+            "cardFrontURL": cardFrontURL,
+            "cardBackURL": cardBackURL
+          },
+        ])
+      });
+    } else {
+      reference.set({
+        "loyaltyCards": FieldValue.arrayUnion([
+          {
+            "cardName": cardName,
+            "vendor": vendor,
+            "programmeName": programmeName,
+            "webURL": webURL,
+            "note": note,
+            "cardFrontURL": cardFrontURL,
+            "cardBackURL": cardBackURL
+          },
+        ])
+      });
+    }
   }
 }

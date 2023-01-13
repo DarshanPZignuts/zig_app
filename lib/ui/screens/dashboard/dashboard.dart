@@ -2,14 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zig_project/services/authentication/auth.dart';
 import 'package:zig_project/ui/dialogs/dialog_box.dart';
-import 'package:zig_project/ui/screens/dashboard/change_password.dart';
+import 'package:zig_project/ui/screens/dashboard/change_password_screen.dart';
 import 'package:zig_project/ui/screens/categories/categories_screen.dart';
 
-import 'package:zig_project/ui/screens/login/login.dart';
+import 'package:zig_project/ui/screens/login/login_screen.dart';
 import 'package:zig_project/resources/colors_manager.dart';
 import 'package:zig_project/resources/string_manager.dart';
+import 'package:zig_project/ui/screens/loyalty_card/loyalty_cards_screen.dart';
 
-import '../loyalty_card/Loyalty_cards.dart';
 // ignore: implementation_imports
 
 class Dashboard extends StatefulWidget {

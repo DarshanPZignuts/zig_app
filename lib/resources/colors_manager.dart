@@ -8,6 +8,10 @@ class ColorManager {
   static Color lightGreen = HexColor.fromHex("#E5F1E9");
   static Color cardBackground = HexColor.fromHex("#CAE7EB");
   static Color cAvatarBackground = HexColor.fromHex("#70A1A8");
+  static Color cardBackground1 = HexColor.fromHex("#D3DAEA");
+  static Color cAvatarBackground1 = HexColor.fromHex("#586789");
+  static Color cardBackground2 = HexColor.fromHex("#F6DDCC");
+  static Color cAvatarBackground2 = HexColor.fromHex("#DC7633");
 
   static const Color black = Colors.black;
 
