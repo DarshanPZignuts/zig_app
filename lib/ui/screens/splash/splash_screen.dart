@@ -16,11 +16,11 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    super.initState();
     Timer(const Duration(seconds: 5), (() {
-      final user =
-          FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      FirebaseAuth.instance.authStateChanges().listen((User? user) {
         if (user != null) {
-          Navigator.pushReplacement(context,
+          Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: ((context) => const Dashboard())));
         } else {
           Navigator.pushReplacement(context,
@@ -33,14 +33,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-          child: Center(
+      body: Center(
         child: Image.asset(
           AssetsManager.splaceLogo,
           height: 200,
           width: 200,
         ),
-      )),
+      ),
     );
   }
 }

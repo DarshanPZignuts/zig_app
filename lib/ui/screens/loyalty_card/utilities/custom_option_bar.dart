@@ -3,24 +3,28 @@ import 'package:zig_project/model/model_loyalty_card.dart';
 import 'package:zig_project/resources/colors_manager.dart';
 import 'package:zig_project/resources/fonts_manager.dart';
 import 'package:zig_project/services/database_service.dart';
-import 'package:zig_project/ui/screens/loyalty_card/add_loyalty_card_screen.dart';
+import 'package:zig_project/ui/screens/loyalty_card/add_loyalty_card/add_loyalty_card_screen.dart';
 
 class CustomOptionBar extends StatelessWidget {
   ModelLoayltyCard modelLoayltyCard;
-  CustomOptionBar({Key? key, required this.modelLoayltyCard}) : super(key: key);
+
+  CustomOptionBar({
+    Key? key,
+    required this.modelLoayltyCard,
+  }) : super(key: key);
 
   DatabaseService _databaseService = DatabaseService();
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(right: 20),
+      padding: const EdgeInsets.only(right: 20),
       child: Container(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             color: ColorManager.white,
             boxShadow: [
-              BoxShadow(
+              const BoxShadow(
                   color: ColorManager.grey, blurRadius: 2, spreadRadius: 1)
             ]),
         width: 144,
@@ -35,6 +39,8 @@ class CustomOptionBar extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: ((context) => AddLoyaltyCard(
+                              docId: modelLoayltyCard.docId,
+                              isEditing: true,
                               modelLoayltyCard: modelLoayltyCard))));
                   // Navigate to Edit
                 },
@@ -44,10 +50,11 @@ class CustomOptionBar extends StatelessWidget {
                       color: ColorManager.primary, fontSize: FontSize.s12),
                 ),
               ),
-              Divider(),
+              const Divider(),
               InkWell(
                 onTap: () async {
-                  await _databaseService.deletCard(modelLoayltyCard);
+                  await _databaseService
+                      .deletCard(modelLoayltyCard.docId ?? "");
                   // delete card
                 },
                 child: Text(

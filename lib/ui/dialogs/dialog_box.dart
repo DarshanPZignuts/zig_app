@@ -6,23 +6,19 @@ import 'package:zig_project/resources/colors_manager.dart';
 import 'package:zig_project/resources/string_manager.dart';
 
 class DialogBox {
-  final Auth _auth = Auth();
-
-  Widget dialogBox(BuildContext context) {
+  static Widget dialogBox({
+    required BuildContext context,
+    required Function() onYes,
+    required String tittle,
+    required String content,
+  }) {
+    final Auth _auth = Auth();
     return AlertDialog(
-      title: const Text(StringManager.alertBoxTittle),
-      content: const Text(StringManager.alertBoxDescription),
+      title: Text(tittle),
+      content: Text(content),
       actions: [
         TextButton(
-            onPressed: () async {
-              if (FirebaseAuth.instance.currentUser != null) {
-                await _auth.signOut();
-              }
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: ((context) => const LogIn())),
-                  (route) => false);
-            },
+            onPressed: onYes,
             child: Text(
               "Yes",
               style: TextStyle(color: ColorManager.primary, fontSize: 18),

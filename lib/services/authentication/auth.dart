@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:zig_project/model/app_user.dart';
 import 'package:zig_project/resources/string_manager.dart';
+import 'package:zig_project/user_preferences/user_preferences.dart';
 
 class Auth {
   final _firebaseAuth = FirebaseAuth.instance;
@@ -19,11 +20,16 @@ class Auth {
     try {
       UserCredential usercredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
-      User? user = await usercredential.user;
-      await user?.updateDisplayName(username);
-      if (user != null) {
-        //todo
+      User? user = usercredential.user;
 
+      if (user != null) {
+        await user.updateDisplayName(username);
+        //todo
+        await UserPreferences.saveLoginUserInfo(AppUser(
+            email: email,
+            isSignIn: true,
+            name: user.displayName,
+            uid: user.uid));
         return "success";
       }
     } on FirebaseAuthException catch (e) {
@@ -37,6 +43,7 @@ class Auth {
     } catch (e) {
       return e.toString();
     }
+    return null;
   }
 
 //Login user with email and pass word.........
@@ -48,6 +55,11 @@ class Auth {
           .signInWithEmailAndPassword(email: email, password: password);
       User? user = userCredential.user;
       if (user != null) {
+        await UserPreferences.saveLoginUserInfo(AppUser(
+            email: email,
+            isSignIn: true,
+            name: user.displayName,
+            uid: user.uid));
         return "success";
       }
     } on FirebaseAuthException catch (e) {
@@ -61,6 +73,7 @@ class Auth {
     } catch (e) {
       return e.toString();
     }
+    return null;
   }
 
 //Change Password....
@@ -76,11 +89,13 @@ class Auth {
     } catch (e) {
       return e.toString();
     }
+    return null;
   }
 
   //SIGN OUT....
 
-  signOut() {
-    _firebaseAuth.signOut();
+  signOut() async {
+    await UserPreferences.clearDetailsOnSignOut();
+    await _firebaseAuth.signOut();
   }
 }

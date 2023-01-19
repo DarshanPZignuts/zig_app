@@ -29,6 +29,13 @@
             {
               "client_id": "581919418118-402fbbjea7kcn5qdlmtnr856md2jrbr7.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "581919418118-040vp7vhcsadm68k9pg5fe82nt29dsub.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.zignuts.zig"
+              }
             }
           ]
         }

@@ -1,41 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:zig_project/model/app_user.dart';
 import 'package:zig_project/model/model_loyalty_card.dart';
 import 'package:zig_project/services/authentication/auth.dart';
-import 'package:zig_project/resources/value_manager.dart';
+import 'package:zig_project/user_preferences/user_preferences.dart';
 
 class DatabaseService {
-  Auth _auth = Auth();
+  final Auth _auth = Auth();
 
   final _firebaseFirestore = FirebaseFirestore.instance;
 
-//Stream<QuerySnapshot<Map<String, dynamic>>>
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getStreamOfLoyaltyCards() {
-    return _firebaseFirestore
-        .collection("cardsOfUser")
+  Stream<QuerySnapshot<Map<String, dynamic>>> getStreamOfLoyaltyCards() {
+    final x = _firebaseFirestore
+        .collection("User")
         .doc(_auth.getUser()?.uid)
+        .collection("loyaltyCards")
         .snapshots();
+    return x;
   }
 
-  deletCard(ModelLoayltyCard modelLoayltyCard) async {
-    await _firebaseFirestore
-        .collection("cardsOfUser")
-        .doc(await _auth.getUser()?.uid)
-        .update({
-          "loyaltyCards": FieldValue.arrayRemove([
-            {
-              "cardName": modelLoayltyCard.cardName,
-              "vendor": modelLoayltyCard.vendor,
-              "programmeName": modelLoayltyCard.programmeName,
-              "webURL": modelLoayltyCard.webURL,
-              "note": modelLoayltyCard.note,
-              "cardFrontURL": modelLoayltyCard.cardFrontURL,
-              "cardBackURL": modelLoayltyCard.cardBackURL
-            },
-          ])
-        })
-        .whenComplete(() => print("Success"))
-        .onError((error, stackTrace) => {print(error.toString())});
+  deletCard(String docId) async {
+    _firebaseFirestore
+        .collection("User")
+        .doc(
+            await UserPreferences.getLoginUserInfo().then((value) => value.uid))
+        .collection("loyaltyCards")
+        .doc(docId)
+        .delete();
   }
 
   saveCardDetails(
@@ -49,37 +38,43 @@ class DatabaseService {
       required Function onSuccess,
       required Function(String) onError}) async {
     DocumentReference reference = _firebaseFirestore
-        .collection("cardsOfUser")
-        .doc(await _auth.getUser()?.uid);
-    final data = await reference.get();
-    if (data.exists) {
-      reference.update({
-        "loyaltyCards": FieldValue.arrayUnion([
-          {
-            "cardName": cardName,
-            "vendor": vendor,
-            "programmeName": programmeName,
-            "webURL": webURL,
-            "note": note,
-            "cardFrontURL": cardFrontURL,
-            "cardBackURL": cardBackURL
-          },
-        ])
-      });
-    } else {
-      reference.set({
-        "loyaltyCards": FieldValue.arrayUnion([
-          {
-            "cardName": cardName,
-            "vendor": vendor,
-            "programmeName": programmeName,
-            "webURL": webURL,
-            "note": note,
-            "cardFrontURL": cardFrontURL,
-            "cardBackURL": cardBackURL
-          },
-        ])
-      });
-    }
+        .collection("User")
+        .doc(
+            await UserPreferences.getLoginUserInfo().then((value) => value.uid))
+        .collection("loyaltyCards")
+        .doc();
+
+    reference.set({
+      "cardName": cardName,
+      "vendor": vendor,
+      "programmeName": programmeName,
+      "webURL": webURL,
+      "note": note,
+      "cardFrontURL": cardFrontURL,
+      "cardBackURL": cardBackURL
+    });
+  }
+
+  updateCardDetails(
+      {required ModelLoayltyCard modelLoayltyCard,
+      required String frontURL,
+      required String backURL,
+      required String docId}) async {
+    DocumentReference reference = _firebaseFirestore
+        .collection("User")
+        .doc(
+            await UserPreferences.getLoginUserInfo().then((value) => value.uid))
+        .collection("loyaltyCards")
+        .doc(docId);
+
+    await reference.update({
+      "cardFrontURL": frontURL,
+      "cardBackURL": backURL,
+      "cardName": modelLoayltyCard.cardName,
+      "vendor": modelLoayltyCard.vendor,
+      "programmeName": modelLoayltyCard.programmeName,
+      "webURL": modelLoayltyCard.webURL,
+      "note": modelLoayltyCard.note,
+    });
   }
 }

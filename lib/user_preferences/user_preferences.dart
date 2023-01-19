@@ -55,7 +55,7 @@ class UserPreferences {
     await prefs.setBool(isSignin, true);
   }
 
-  static Future<AppUser> getLoginUserInfo(AppUser user) async {
+  static Future<AppUser> getLoginUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? uId = await prefs.getString(id);
     String? uName = await prefs.getString(name);

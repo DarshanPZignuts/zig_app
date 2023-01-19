@@ -6,9 +6,12 @@ class ModelLoayltyCard {
   String? note;
   String? cardFrontURL;
   String? cardBackURL;
+  String? docId;
 
   ModelLoayltyCard(
-      {this.cardName,
+      {this.docId,
+      this.cardName,
+      this.note,
       this.vendor,
       this.programmeName,
       this.webURL,

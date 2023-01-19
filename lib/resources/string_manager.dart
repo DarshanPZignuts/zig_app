@@ -27,6 +27,9 @@ class StringManager {
   static const String sendLinkButtonText = "SEND LINK";
   static const String emailHintText = "Email";
 
+  static const String allCategoryText = "All Categories";
+  static const String yourFavoriteText = "Your Favorite";
+
   //signin.dart
   static const String signUpTittle = "Sign Up";
   static const String signUpSubTittle = "Get started with new account";
@@ -43,10 +46,23 @@ class StringManager {
   static const String dontHaveAccountText = "Don't have account?";
   static const String loginCreateAccountButton = "Create Account";
 
+// add_loyalty_card_screen.dart
+  static const String addLoyaltyCardAppbarTittle = "New Card";
+  static const String addLoyaltyCardContent =
+      "Scan your card barcode or QR code and enter the following info as you prefer to link it to your card";
+  static const String loyaltyCardAddedmessage = "New loyalty card Added";
+  static const String cardImagerequireMessage = "Card Image should required !!";
+  static const String loyaltyCardDataUpdationMessage =
+      "Data successfully updated.";
+  //card_image_section.dart
+  static const String chooseCardFront = "Card front";
+  static const String chooseCardBack = "Card back";
+
   //DialogBox or dialg_box.dart
   static const String alertBoxTittle = "Please Confirm!";
   static const String alertBoxDescription =
       "Are sure to sign out from account?";
+  static const String alertBoxDescription2 = "Are sure to delete card?";
 
   //ChangePassword or change_password.dart
   static const String changePasswordTitle = "Change Password";
@@ -60,13 +76,18 @@ class StringManager {
 // Validations
   static const String validateEmptyPassword = "Password should not be empty";
   static const String validatePasswordLength =
-      "Length should be greater or equal to 6 character";
+      "Password should be minimum of 6 letter";
   static const String validatePasswordCharacter = "Please use characters";
   static const String validatePasswordNumber = "Please use Numbers";
   static const String validateConfirmPasswordMatch = "Password not matched";
   static const String validateEmptyEmail = "Email should not be empty";
   static const String validateEmail = "Invalid email address";
   static const String validateEmptyUsername = "Username should not be empty";
+  static const String validateEmptyCardName = "Card name should not be empty";
+  static const String validateEmptyProgrammeName =
+      "Programme name should not be empty";
+  static const String validateEmptyWebURL = "Website URL should not be empty";
+  static const String validateEmptyNote = "Note should not be empty";
 
   //TextFormField strings
   static const String confirmPasswordTittle = "Confirm Password";
@@ -74,6 +95,16 @@ class StringManager {
   static const String usernameLable = "Username";
   static const String passwordLable = "Password";
   static const String confirmPasswordLable = "Confirm Password";
+  static const String cardNameLableText = "Card name";
+  static const String programmeNameLableText = "Programme name";
+  static const String webURLLableText = "Website URL";
+  static const String noteLableText = "Note";
+
+//card_detail || popup menu options
+  static const String editOptionText = "Edit";
+  static const String deleteOptionText = "Delete";
+  static const String memberIdTittleText = "Member ID: ";
+  static const String cardDetailAppbarText = "Card Details";
 
   //errors
   static const String userNotFound = "Email id is not registerd";

@@ -2,7 +2,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:zig_project/model/model_loyalty_card.dart';
 import 'package:zig_project/resources/colors_manager.dart';
-import 'package:zig_project/ui/screens/loyalty_card/add_loyalty_card_screen.dart';
+import 'package:zig_project/ui/screens/loyalty_card/add_loyalty_card/add_loyalty_card_screen.dart';
 
 class EmptyCard extends StatefulWidget {
   const EmptyCard({super.key});
