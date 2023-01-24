@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:zig_project/ui/screens/login/login_screen.dart';
 import 'package:zig_project/resources/colors_manager.dart';
 import 'package:zig_project/resources/string_manager.dart';
-import 'package:zig_project/ui/widgets/common_widgets.dart';
+import 'package:zig_project/ui/widgets/widgets.dart';
 
 class ResetPassword extends StatelessWidget {
+  static const String id = "ResetPassword";
   ResetPassword({super.key});
 
   final TextEditingController _emailController = TextEditingController();
@@ -69,8 +70,7 @@ class ResetPassword extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content:
                           Text(StringManager.resetPasswordSuccessSnackbar)));
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => const LogIn()));
+                  Navigator.of(context).pushReplacementNamed(LogIn.id);
                 } on FirebaseAuthException catch (e) {
                   if (e.code == "user-not-found") {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

@@ -7,6 +7,7 @@ import 'package:zig_project/ui/screens/login/login_screen.dart';
 import 'package:zig_project/resources/assets_manager.dart';
 
 class SplashScreen extends StatefulWidget {
+  static const String id = "/SplashScreen";
   const SplashScreen({super.key});
 
   @override
@@ -19,12 +20,12 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(const Duration(seconds: 5), (() {
       FirebaseAuth.instance.authStateChanges().listen((User? user) {
-        if (user != null) {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: ((context) => const Dashboard())));
-        } else {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: ((context) => const LogIn())));
+        if (mounted) {
+          if (user != null) {
+            Navigator.of(context).pushReplacementNamed(Dashboard.id);
+          } else {
+            Navigator.pushReplacementNamed(context, LogIn.id);
+          }
         }
       });
     }));

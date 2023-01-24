@@ -90,6 +90,7 @@ class StringManager {
   static const String validateEmptyNote = "Note should not be empty";
 
   //TextFormField strings
+
   static const String confirmPasswordTittle = "Confirm Password";
   static const String emailLable = "Email";
   static const String usernameLable = "Username";
@@ -99,6 +100,7 @@ class StringManager {
   static const String programmeNameLableText = "Programme name";
   static const String webURLLableText = "Website URL";
   static const String noteLableText = "Note";
+  static const String newPasswordLable = "New password";
 
 //card_detail || popup menu options
   static const String editOptionText = "Edit";
@@ -113,4 +115,6 @@ class StringManager {
   static const String emailAlreadyUse =
       'The account already exists for this email.';
   static const String wrongPassword = 'Wrong password provided for this user.';
+  static const String internetConnectionError =
+      "Please check your internet connection.";
 }

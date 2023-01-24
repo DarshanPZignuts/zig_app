@@ -6,11 +6,12 @@ import 'package:zig_project/ui/screens/signup/signin_screen.dart';
 import 'package:zig_project/resources/assets_manager.dart';
 import 'package:zig_project/resources/colors_manager.dart';
 import 'package:zig_project/resources/string_manager.dart';
-import 'package:zig_project/ui/widgets/common_widgets.dart';
+import 'package:zig_project/ui/widgets/widgets.dart';
+import 'package:zig_project/utils/validations/validations.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
-
+  static const String id = "login";
   @override
   State<LogIn> createState() => _LogInState();
 }
@@ -21,8 +22,7 @@ class _LogInState extends State<LogIn> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _passwordcontroller = TextEditingController();
-  RegExp regemail = RegExp(
-      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  Validation _validationObject = Validation();
   bool showPassword = false;
 
   @override
@@ -64,14 +64,8 @@ class _LogInState extends State<LogIn> {
                       label: StringManager.emailLable,
                       obscureText: false,
                       isPassword: false,
-                      validate: (String? val) {
-                        if (val!.isEmpty) {
-                          return StringManager.validateEmptyEmail;
-                        } else if (!regemail.hasMatch(val)) {
-                          return StringManager.validateEmail;
-                        }
-                        return null;
-                      },
+                      validate: (value) =>
+                          _validationObject.validateEmail(value),
                       controller: _emailcontroller),
                   const SizedBox(
                     height: 30,
@@ -116,10 +110,7 @@ class _LogInState extends State<LogIn> {
                         padding: const EdgeInsets.only(right: 55),
                         child: TextButton(
                             onPressed: () async {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ResetPassword()));
+                              Navigator.pushNamed(context, ResetPassword.id);
                             },
                             child: Text(
                               StringManager.resetButtonText,
@@ -140,24 +131,22 @@ class _LogInState extends State<LogIn> {
                     onTap: () async {
                       _formkey.currentState!.activate();
                       if (_formkey.currentState!.validate()) {
-                        setState(() {
-                          isloading = true;
-                        });
+                        showDialog(
+                            barrierDismissible: true,
+                            context: context,
+                            builder: (context) =>
+                                CommonWidgets.loadingIndicator());
 
                         final user = await _auth.logInwithEmailandpassword(
                             _emailcontroller.text.trim(),
                             _passwordcontroller.text.trim());
                         if (user == "success") {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: ((context) => const Dashboard())));
+                          Navigator.pushReplacementNamed(context, Dashboard.id);
                         } else {
+                          Navigator.of(context).pop();
+
                           ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(user.toString())));
-                          setState(() {
-                            isloading = false;
-                          });
                         }
                       }
                     },
@@ -171,9 +160,8 @@ class _LogInState extends State<LogIn> {
                       ),
                       TextButton(
                           onPressed: () {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: ((context) => const SignIn())));
+                            Navigator.of(context)
+                                .pushReplacementNamed(SignIn.id);
                           },
                           child: Text(
                             StringManager.loginCreateAccountButton,

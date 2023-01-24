@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:zig_project/ui/screens/categories/categories_screen.dart';
+import 'package:zig_project/ui/screens/dashboard/artical_list_screen/article_list_screen.dart';
 import 'package:zig_project/ui/screens/dashboard/home_screen/home_screen.dart';
 
 import 'package:zig_project/resources/colors_manager.dart';
 import 'package:zig_project/resources/string_manager.dart';
+import 'package:zig_project/ui/screens/dashboard/random_user_screen/random_user_screen.dart';
 import 'package:zig_project/ui/screens/loyalty_card/loyalty_cards_list/loyalty_cards_screen.dart';
 
 // ignore: implementation_imports
 
 class Dashboard extends StatefulWidget {
+  static const String id = "Dashboard";
   const Dashboard({super.key});
 
   @override
@@ -20,12 +23,8 @@ class _DashboardState extends State<Dashboard> {
 
   final List<Widget> _widgetslist = [
     const HomeScreen(),
-    const Center(
-      child: Text(StringManager.vendorPageContent),
-    ),
-    const Center(
-      child: Text(StringManager.listPageContent),
-    ),
+    RandomUserScreen(),
+    ArticalList(),
     const Categories(),
     const LoyaltyCards()
   ];

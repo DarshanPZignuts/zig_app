@@ -5,10 +5,12 @@ import 'package:zig_project/resources/fonts_manager.dart';
 import 'package:zig_project/resources/string_manager.dart';
 import 'package:zig_project/resources/style_manager.dart';
 import 'package:zig_project/ui/screens/loyalty_card/loyalty_card_detail/custom_detail_card.dart';
+import 'package:zig_project/ui/screens/loyalty_card/loyalty_card_detail/loyalty_card_detail_screen_arguments.dart';
 
 class LoyaltyCardDetail extends StatefulWidget {
-  ModelLoayltyCard modelLoayltyCard;
-  LoyaltyCardDetail({super.key, required this.modelLoayltyCard});
+  static const String id = "LoyaltyCardDetail";
+
+  LoyaltyCardDetail({super.key});
 
   @override
   State<LoyaltyCardDetail> createState() => _LoyaltyCardDetailState();
@@ -17,6 +19,8 @@ class LoyaltyCardDetail extends StatefulWidget {
 class _LoyaltyCardDetailState extends State<LoyaltyCardDetail> {
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments
+        as LoyaltyCardDetailScreenArguments;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -34,7 +38,7 @@ class _LoyaltyCardDetailState extends State<LoyaltyCardDetail> {
         ),
       ),
       body: Column(children: [
-        DetailCard(modelLoayltyCard: widget.modelLoayltyCard),
+        DetailCard(modelLoayltyCard: args.modelLoayltyCard),
         Container(
           padding: const EdgeInsets.all(20),
           child: Column(children: [
@@ -66,7 +70,7 @@ class _LoyaltyCardDetailState extends State<LoyaltyCardDetail> {
               const SizedBox(
                 width: 4,
               ),
-              Text(widget.modelLoayltyCard.cardName!,
+              Text(args.modelLoayltyCard.cardName!,
                   style: getBoldStyle(
                       color: ColorManager.black, fontSize: FontSize.s14))
             ],

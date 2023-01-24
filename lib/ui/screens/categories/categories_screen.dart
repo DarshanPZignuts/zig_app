@@ -55,7 +55,7 @@ class _CategoriesState extends State<Categories> {
     "Vendor 4",
     "Vendor 5",
   ];
-  var selectedValue = null;
+  var _selectedValue = null;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,11 +124,11 @@ class _CategoriesState extends State<Categories> {
               },
             ),
             Categoriesutilities.selectVendor(
-                selectedValue: selectedValue,
+                selectedValue: _selectedValue,
                 hintText: "Select Vendor",
                 onChanged: (p0) {
                   setState(() {
-                    selectedValue = p0;
+                    _selectedValue = p0;
                   });
                 },
                 vendorList: vendorList),

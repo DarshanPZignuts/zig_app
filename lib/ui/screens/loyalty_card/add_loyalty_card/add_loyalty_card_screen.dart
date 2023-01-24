@@ -8,18 +8,17 @@ import 'package:zig_project/resources/string_manager.dart';
 import 'package:zig_project/resources/style_manager.dart';
 import 'package:zig_project/services/database_service.dart';
 import 'package:zig_project/services/storage_service.dart';
+import 'package:zig_project/ui/screens/loyalty_card/loyalty_card_arguments.dart';
 import 'package:zig_project/ui/screens/loyalty_card/add_loyalty_card/card_image_section.dart';
 import 'package:zig_project/ui/screens/loyalty_card/add_loyalty_card/form_section.dart';
 import 'package:zig_project/ui/screens/loyalty_card/loyalty_cards_list/loyalty_cards_screen.dart';
 
-import 'package:zig_project/ui/widgets/common_widgets.dart';
+import 'package:zig_project/ui/widgets/widgets.dart';
 
 class AddLoyaltyCard extends StatefulWidget {
-  ModelLoayltyCard modelLoayltyCard;
-  bool? isEditing;
-  String? docId;
-  AddLoyaltyCard(
-      {super.key, required this.modelLoayltyCard, this.isEditing, this.docId});
+  static const String id = "AddLoyaltyCard";
+
+  AddLoyaltyCard({super.key});
 
   @override
   State<AddLoyaltyCard> createState() => _AddLoyaltyCardState();
@@ -32,6 +31,8 @@ class _AddLoyaltyCardState extends State<AddLoyaltyCard> {
   bool isEnable = true;
   @override
   Widget build(BuildContext context) {
+    final args =
+        ModalRoute.of(context)!.settings.arguments as LoyaltyCardArguments;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -56,11 +57,11 @@ class _AddLoyaltyCardState extends State<AddLoyaltyCard> {
           ),
           ImageSection(
             isEnable: isEnable,
-            backURL: widget.modelLoayltyCard.cardBackURL,
-            frontURL: widget.modelLoayltyCard.cardFrontURL,
-            backImgSelect: (p0) {
+            backURL: args.modelLoayltyCard.cardBackURL,
+            frontURL: args.modelLoayltyCard.cardFrontURL,
+            backImgSelect: (backImageFile) {
               setState(() {
-                backImg = p0;
+                backImg = backImageFile;
               });
             },
             frontImgSelect: (p0) {
@@ -73,14 +74,14 @@ class _AddLoyaltyCardState extends State<AddLoyaltyCard> {
             height: 30,
           ),
           FormSection(
-            modelLoayltyCard: widget.modelLoayltyCard,
-            onSaveForm: (p0) async {
+            modelLoayltyCard: args.modelLoayltyCard,
+            onSaveForm: (modelLoyalty) async {
               setState(() {
                 isEnable = false;
               });
-              widget.isEditing != null
-                  ? await updateInfo(p0)
-                  : await saveInfo(p0);
+              args.isEditing != null
+                  ? await updateInfo(modelLoyalty, args)
+                  : await saveInfo(modelLoyalty, args);
               setState(() {
                 isEnable = true;
               });
@@ -91,7 +92,8 @@ class _AddLoyaltyCardState extends State<AddLoyaltyCard> {
     );
   }
 
-  saveInfo(ModelLoayltyCard p0) async {
+  Future<void> saveInfo(
+      ModelLoayltyCard modelLoyalty, LoyaltyCardArguments args) async {
     if (frontImg != null && backImg != null) {
       final url = await _storageService.saveImages(frontImg!, backImg!);
       _databaseService.saveCardDetails(
@@ -101,39 +103,42 @@ class _AddLoyaltyCardState extends State<AddLoyaltyCard> {
           onSuccess: () {
             CommonWidgets.showSnakbar(
                 context, StringManager.loyaltyCardAddedmessage);
+            Navigator.of(context).pushReplacementNamed(LoyaltyCards.id);
           },
-          cardName: p0.cardName!,
-          vendor: p0.vendor!,
-          programmeName: p0.programmeName!,
-          webURL: p0.webURL!,
-          note: p0.note!,
+          cardName: modelLoyalty.cardName!,
+          vendor: modelLoyalty.vendor!,
+          programmeName: modelLoyalty.programmeName!,
+          webURL: modelLoyalty.webURL!,
+          note: modelLoyalty.note!,
           cardFrontURL: url[0],
           cardBackURL: url[1]);
-
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const LoyaltyCards()));
     } else {
       CommonWidgets.showSnakbar(context, StringManager.cardImagerequireMessage);
     }
   }
 
-  updateInfo(ModelLoayltyCard p0) async {
+  Future<void> updateInfo(
+      ModelLoayltyCard modelLoyalty, LoyaltyCardArguments args) async {
     if (frontImg != null && backImg != null) {
       final url = await _storageService.saveImages(frontImg!, backImg!);
       setState(() {
-        widget.modelLoayltyCard.cardBackURL = url[1];
-        widget.modelLoayltyCard.cardFrontURL = url[0];
+        args.modelLoayltyCard.cardBackURL = url[1];
+        args.modelLoayltyCard.cardFrontURL = url[0];
       });
     }
     await _databaseService.updateCardDetails(
-      backURL: widget.modelLoayltyCard.cardBackURL!,
-      frontURL: widget.modelLoayltyCard.cardFrontURL!,
-      docId: widget.docId!,
-      modelLoayltyCard: p0,
+      onError: (String error) {
+        CommonWidgets.showSnakbar(context, error);
+      },
+      onSuccess: () {
+        CommonWidgets.showSnakbar(
+            context, StringManager.loyaltyCardDataUpdationMessage);
+        Navigator.of(context).pushReplacementNamed(LoyaltyCards.id);
+      },
+      backURL: args.modelLoayltyCard.cardBackURL!,
+      frontURL: args.modelLoayltyCard.cardFrontURL!,
+      docId: args.docId!,
+      modelLoayltyCard: modelLoyalty,
     );
-    CommonWidgets.showSnakbar(
-        context, StringManager.loyaltyCardDataUpdationMessage);
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const LoyaltyCards()));
   }
 }

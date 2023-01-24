@@ -13,17 +13,18 @@ class StorageService {
   ) async {
     String frontpath = frontView!.path;
     String backpath = backView!.path;
+
     final reference = await _firebaseStorage.ref("userCardImages").child(
         await UserPreferences.getLoginUserInfo()
             .then((value) => value.uid.toString()));
 
     final frontViewLink =
-        await reference.child(frontpath).putFile(frontView!).then((p0) {
+        await reference.child(frontpath).putFile(frontView).then((p0) {
       return p0.ref.getDownloadURL();
     });
 
     final backViewLink =
-        await reference.child(backpath).putFile(backView!).then((p0) {
+        await reference.child(backpath).putFile(backView).then((p0) {
       return p0.ref.getDownloadURL();
     });
     List<String> list = [frontViewLink, backViewLink];

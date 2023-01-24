@@ -3,9 +3,10 @@ import 'package:zig_project/services/authentication/auth.dart';
 import 'package:zig_project/ui/screens/dashboard/dashboard.dart';
 import 'package:zig_project/resources/colors_manager.dart';
 import 'package:zig_project/resources/string_manager.dart';
-import 'package:zig_project/ui/widgets/common_widgets.dart';
+import 'package:zig_project/ui/widgets/widgets.dart';
 
 class ChangePassword extends StatefulWidget {
+  static const String id = "ChangePassword";
   const ChangePassword({super.key});
 
   @override
@@ -58,7 +59,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 });
               },
               isPassword: true,
-              label: "New password",
+              label: StringManager.newPasswordLable,
               showConfirmPassword: showConfirmPassword,
               showPassword: showPassword,
               controller: _passwordController,
@@ -90,7 +91,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 });
               },
               isPassword: true,
-              label: "Confirm password",
+              label: StringManager.confirmPasswordLable,
               showConfirmPassword: showConfirmPassword,
               showPassword: showPassword,
               controller: _confirmPasswordController,
@@ -124,8 +125,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 if (message == "success") {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text(StringManager.changePasswordSnackbarText)));
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: ((context) => const Dashboard())));
+                  Navigator.of(context).pushReplacementNamed(Dashboard.id);
                 } else {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text(message)));

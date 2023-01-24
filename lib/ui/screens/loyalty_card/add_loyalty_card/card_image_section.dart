@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:zig_project/resources/assets_manager.dart';
 import 'package:zig_project/resources/string_manager.dart';
-import 'package:zig_project/ui/widgets/common_widgets.dart';
+import 'package:zig_project/ui/widgets/select_image_card.dart';
+import 'package:zig_project/ui/widgets/widgets.dart';
 
 class ImageSection extends StatefulWidget {
   Function(File) backImgSelect;
@@ -61,7 +62,7 @@ class _ImageSectionState extends State<ImageSection> {
                     });
                   }
                 : null,
-            child: CommonWidgets.chooseImageCard(
+            child: SelectImageCard(
                 imgHolder: AssetsManager.frontIdIcon,
                 tittle: StringManager.chooseCardFront,
                 imageFile: frontCardId,
@@ -79,7 +80,7 @@ class _ImageSectionState extends State<ImageSection> {
                   });
                 }
               : null,
-          child: CommonWidgets.chooseImageCard(
+          child: SelectImageCard(
               imgHolder: AssetsManager.backIdIcon,
               tittle: StringManager.chooseCardBack,
               imageFile: backCardId,

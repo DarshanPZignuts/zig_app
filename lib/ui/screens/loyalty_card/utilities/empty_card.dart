@@ -2,6 +2,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:zig_project/model/model_loyalty_card.dart';
 import 'package:zig_project/resources/colors_manager.dart';
+import 'package:zig_project/ui/screens/loyalty_card/loyalty_card_arguments.dart';
 import 'package:zig_project/ui/screens/loyalty_card/add_loyalty_card/add_loyalty_card_screen.dart';
 
 class EmptyCard extends StatefulWidget {
@@ -27,18 +28,15 @@ class _EmptyCardState extends State<EmptyCard> {
                 strokeWidth: 2,
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: ((context) => AddLoyaltyCard(
-                                  modelLoayltyCard: ModelLoayltyCard(
-                                      cardBackURL: "",
-                                      cardFrontURL: "",
-                                      cardName: "",
-                                      programmeName: "",
-                                      vendor: "",
-                                      webURL: ""),
-                                ))));
+                    Navigator.pushNamed(context, AddLoyaltyCard.id,
+                        arguments: LoyaltyCardArguments(
+                            modelLoayltyCard: ModelLoayltyCard(
+                                cardBackURL: "",
+                                cardFrontURL: "",
+                                cardName: "",
+                                programmeName: "",
+                                vendor: "",
+                                webURL: "")));
                   },
                   child: Container(
                     decoration:

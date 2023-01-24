@@ -7,22 +7,20 @@ import 'package:zig_project/resources/style_manager.dart';
 import 'package:zig_project/services/database_service.dart';
 import 'package:zig_project/services/storage_service.dart';
 import 'package:zig_project/ui/dialogs/dialog_box.dart';
+import 'package:zig_project/ui/screens/loyalty_card/loyalty_card_arguments.dart';
 import 'package:zig_project/ui/screens/loyalty_card/add_loyalty_card/add_loyalty_card_screen.dart';
 import 'package:zig_project/ui/screens/loyalty_card/loyalty_card_detail/loyalty_card_detail_screen.dart';
+import 'package:zig_project/ui/screens/loyalty_card/loyalty_card_detail/loyalty_card_detail_screen_arguments.dart';
 
 class CustomCard extends StatefulWidget {
-  final String tittle;
-  final String subTittle;
   final Color bgColor;
   final Color circleBgColor;
-  ModelLoayltyCard loayltyCard;
+  ModelLoayltyCard modelLoayltyCard;
   CustomCard(
       {Key? key,
-      required this.tittle,
-      required this.subTittle,
       required this.bgColor,
       required this.circleBgColor,
-      required this.loayltyCard})
+      required this.modelLoayltyCard})
       : super(key: key);
 
   @override
@@ -44,12 +42,9 @@ class CustomCardState extends State<CustomCard> {
               Stack(children: [
                 InkWell(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: ((context) => LoyaltyCardDetail(
-                                  modelLoayltyCard: widget.loayltyCard,
-                                ))));
+                    Navigator.pushNamed(context, LoyaltyCardDetail.id,
+                        arguments: LoyaltyCardDetailScreenArguments(
+                            modelLoayltyCard: widget.modelLoayltyCard));
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -62,7 +57,9 @@ class CustomCardState extends State<CustomCard> {
                         radius: 27,
                         backgroundColor: widget.circleBgColor,
                         child: Text(
-                          widget.tittle.substring(0, 1).toUpperCase(),
+                          widget.modelLoayltyCard.cardName!
+                              .substring(0, 1)
+                              .toUpperCase(),
                           style: const TextStyle(
                               color: ColorManager.white,
                               fontSize: FontSize.s20,
@@ -80,14 +77,12 @@ class CustomCardState extends State<CustomCard> {
                       PopupMenuButton(
                           onSelected: (value) async {
                             if (value == 1) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: ((context) => AddLoyaltyCard(
-                                          docId: widget.loayltyCard.docId,
-                                          isEditing: true,
-                                          modelLoayltyCard:
-                                              widget.loayltyCard))));
+                              Navigator.pushNamed(context, AddLoyaltyCard.id,
+                                  arguments: LoyaltyCardArguments(
+                                      docId: widget.modelLoayltyCard.docId,
+                                      isEditing: true,
+                                      modelLoayltyCard:
+                                          widget.modelLoayltyCard));
                             } else if (value == 2) {
                               showDialog(
                                 context: context,
@@ -96,11 +91,11 @@ class CustomCardState extends State<CustomCard> {
                                     onYes: () async {
                                       Navigator.of(context).pop();
                                       await _databaseService.deletCard(
-                                          widget.loayltyCard.docId ?? "");
+                                          widget.modelLoayltyCard.docId ?? "");
                                       _storageService.deleteImage(
-                                          widget.loayltyCard.cardFrontURL);
+                                          widget.modelLoayltyCard.cardFrontURL);
                                       _storageService.deleteImage(
-                                          widget.loayltyCard.cardBackURL);
+                                          widget.modelLoayltyCard.cardBackURL);
                                     },
                                     tittle: StringManager.alertBoxTittle,
                                     content:
@@ -147,11 +142,11 @@ class CustomCardState extends State<CustomCard> {
               Column(
                 children: [
                   Text(
-                    widget.tittle,
+                    widget.modelLoayltyCard.cardName ?? "",
                     style: getBoldStyle(
                         color: Colors.black, fontSize: FontSize.s14),
                   ),
-                  Text(widget.subTittle,
+                  Text(widget.modelLoayltyCard.programmeName ?? "",
                       style: TextStyle(
                           color: ColorManager.darkGrey,
                           fontSize: 10,

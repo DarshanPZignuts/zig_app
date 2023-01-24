@@ -1,10 +1,12 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zig_project/model/app_user.dart';
+import 'package:zig_project/user_preferences/global_variables.dart';
 
 const String id = "id";
 const String name = "name";
 const String email = "email";
 const String isSignin = "isSignin";
+const String selectedLocaleLanguageCodePref = "selectedLocaleLanguageCode";
 
 class UserPreferences {
   Future<String> getUserId() async {
@@ -45,6 +47,19 @@ class UserPreferences {
   Future<void> setIsSignIn({required bool isSignIn}) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(isSignin, isSignIn);
+  }
+
+  static Future<String> getLocaleLanguageCode() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(selectedLocaleLanguageCodePref) ??
+        LanguageCode.languageCodeEnglish;
+  }
+
+  static Future<void> setLocaleLanguageCode(
+      {required String languageCode}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(selectedLocaleLanguageCodePref, languageCode);
+    GlobalVariables.languageCode = languageCode;
   }
 
   static Future<void> saveLoginUserInfo(AppUser user) async {

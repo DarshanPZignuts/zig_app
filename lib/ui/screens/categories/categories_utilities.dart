@@ -5,7 +5,7 @@ import 'package:zig_project/resources/fonts_manager.dart';
 import 'package:zig_project/resources/string_manager.dart';
 import 'package:zig_project/resources/style_manager.dart';
 import 'package:zig_project/resources/value_manager.dart';
-import 'package:zig_project/ui/widgets/common_widgets.dart';
+import 'package:zig_project/ui/widgets/widgets.dart';
 
 class Categoriesutilities {
   static Widget selectVendor(
@@ -342,7 +342,7 @@ class Categoriesutilities {
                   width: 80,
                   child: Center(
                       child: Text(
-                    "More>>",
+                    "More >>",
                     style: TextStyle(
                         color: ColorManager.primary,
                         fontWeight: FontWeightManager.bold,

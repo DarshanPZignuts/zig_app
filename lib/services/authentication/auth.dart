@@ -48,8 +48,7 @@ class Auth {
 
 //Login user with email and pass word.........
 
-  Future<String?> logInwithEmailandpassword(
-      String email, String password) async {
+  logInwithEmailandpassword(String email, String password) async {
     try {
       UserCredential userCredential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
@@ -69,11 +68,11 @@ class Auth {
         return StringManager.userNotFound;
       } else if (e.code == 'wrong-password') {
         return StringManager.wrongPassword;
+      } else if (e.code == 'too-many-requests') {
+        return "Please try again after some time";
       }
-    } catch (e) {
-      return e.toString();
     }
-    return null;
+    return "Something went wrong!!";
   }
 
 //Change Password....

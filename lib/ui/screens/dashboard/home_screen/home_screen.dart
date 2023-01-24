@@ -7,6 +7,7 @@ import 'package:zig_project/services/authentication/auth.dart';
 import 'package:zig_project/ui/dialogs/dialog_box.dart';
 import 'package:zig_project/ui/screens/dashboard/change_password_screen.dart';
 import 'package:zig_project/ui/screens/dashboard/test.dart';
+import 'package:zig_project/ui/screens/language/language_screen.dart';
 import 'package:zig_project/ui/screens/login/login_screen.dart';
 import 'package:zig_project/user_preferences/user_preferences.dart';
 
@@ -36,6 +37,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(Icons.dark_mode),
+          )
+        ],
         backgroundColor: Colors.transparent,
         foregroundColor: ColorManager.primary,
         elevation: 0,
@@ -71,28 +78,30 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: const Icon(Icons.password),
               style: ListTileStyle.drawer,
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const ChangePassword()));
+                Navigator.of(context).pushNamed(ChangePassword.id);
               },
             ),
-            const ListTile(
-              title: Text(StringManager.dashboardListTileAddress),
-              leading: Icon(Icons.apartment),
-              style: ListTileStyle.drawer,
-            ),
-            const ListTile(
-              title: Text(StringManager.dashboardListTileOther),
-              leading: Icon(Icons.more_horiz),
-              style: ListTileStyle.drawer,
-            ),
+
             ListTile(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LanguageScreen(),
+                    ));
+              },
               title: Text(StringManager.dashboardListTileOther),
               leading: Icon(Icons.more_horiz),
               style: ListTileStyle.drawer,
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const Test(),
-              )),
             ),
+            // ListTile(
+            //   title: Text(StringManager.dashboardListTileOther),
+            //   leading: Icon(Icons.more_horiz),
+            //   style: ListTileStyle.drawer,
+            //   onTap: () => Navigator.of(context).pushNamed(MaterialPageRoute(
+            //     builder: (context) => const Test(),
+            //   )),
+            // ),
             ListTile(
               onTap: () async {
                 showDialog(
@@ -104,11 +113,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (FirebaseAuth.instance.currentUser != null) {
                             await _auth.signOut();
                           }
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: ((context) => const LogIn())),
-                              (route) => false);
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, LogIn.id, (route) => false);
                         },
                         tittle: StringManager.alertBoxTittle)));
               },

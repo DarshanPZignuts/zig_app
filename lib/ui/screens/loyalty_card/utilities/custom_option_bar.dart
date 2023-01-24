@@ -3,6 +3,7 @@ import 'package:zig_project/model/model_loyalty_card.dart';
 import 'package:zig_project/resources/colors_manager.dart';
 import 'package:zig_project/resources/fonts_manager.dart';
 import 'package:zig_project/services/database_service.dart';
+import 'package:zig_project/ui/screens/loyalty_card/loyalty_card_arguments.dart';
 import 'package:zig_project/ui/screens/loyalty_card/add_loyalty_card/add_loyalty_card_screen.dart';
 
 class CustomOptionBar extends StatelessWidget {
@@ -35,13 +36,11 @@ class CustomOptionBar extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: ((context) => AddLoyaltyCard(
-                              docId: modelLoayltyCard.docId,
-                              isEditing: true,
-                              modelLoayltyCard: modelLoayltyCard))));
+                  Navigator.pushNamed(context, AddLoyaltyCard.id,
+                      arguments: LoyaltyCardArguments(
+                          docId: modelLoayltyCard.docId,
+                          isEditing: true,
+                          modelLoayltyCard: modelLoayltyCard));
                   // Navigate to Edit
                 },
                 child: Text(

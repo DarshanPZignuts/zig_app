@@ -11,4 +11,5 @@ class AssetsManager {
   static const String vegetableImage = "$_IMAGE_PATH/vegetables.jpg";
   static const String frontIdIcon = "$_ICON_PATH/frontid.png";
   static const String backIdIcon = "$_ICON_PATH/backid.png";
+  static const String placeholderImage = "$_IMAGE_PATH/placeholder.png";
 }

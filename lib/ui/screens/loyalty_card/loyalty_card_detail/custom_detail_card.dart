@@ -7,6 +7,7 @@ import 'package:zig_project/resources/fonts_manager.dart';
 import 'package:zig_project/resources/string_manager.dart';
 import 'package:zig_project/resources/style_manager.dart';
 import 'package:zig_project/services/database_service.dart';
+import 'package:zig_project/ui/screens/loyalty_card/loyalty_card_arguments.dart';
 import 'package:zig_project/ui/screens/loyalty_card/add_loyalty_card/add_loyalty_card_screen.dart';
 import 'package:zig_project/ui/screens/loyalty_card/loyalty_cards_list/loyalty_cards_screen.dart';
 
@@ -88,53 +89,21 @@ class _DetailCardState extends State<DetailCard> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       PopupMenuButton(
-                          onSelected: (value) async {
-                            if (value == 1) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: ((context) => AddLoyaltyCard(
-                                          docId: widget.modelLoayltyCard.docId,
-                                          isEditing: true,
-                                          modelLoayltyCard:
-                                              widget.modelLoayltyCard))));
-                            } else if (value == 2) {
-                              await _databaseService.deletCard(
-                                  widget.modelLoayltyCard.docId ?? "");
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                builder: (context) => const LoyaltyCards(),
-                              ));
-                            }
-                          },
+                          onSelected: (value) => onSelected(value),
                           position: PopupMenuPosition.under,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5)),
                           itemBuilder: ((context) {
                             return [
-                              PopupMenuItem(
-                                  value: 1,
-                                  height: 20,
-                                  child: Text(
-                                    StringManager.editOptionText,
-                                    style: TextStyle(
-                                        color: ColorManager.primary,
-                                        fontSize: FontSize.s14),
-                                  )),
+                              //edit option
+                              getPopUpMenuItem(StringManager.editOptionText, 1),
                               const PopupMenuItem(
                                 height: 2,
                                 child: Divider(),
                               ),
-                              PopupMenuItem(
-                                value: 2,
-                                height: 20,
-                                child: Text(
-                                  StringManager.deleteOptionText,
-                                  style: TextStyle(
-                                      color: ColorManager.primary,
-                                      fontSize: FontSize.s14),
-                                ),
-                              )
+                              //delete option
+                              getPopUpMenuItem(
+                                  StringManager.deleteOptionText, 2)
                             ];
                           }))
                     ],
@@ -146,5 +115,29 @@ class _DetailCardState extends State<DetailCard> {
             ],
           )),
     );
+  }
+
+  PopupMenuItem getPopUpMenuItem(String title, int value) {
+    return PopupMenuItem(
+      value: value,
+      height: 20,
+      child: Text(
+        title,
+        style: TextStyle(color: ColorManager.primary, fontSize: FontSize.s14),
+      ),
+    );
+  }
+
+  Future<void> onSelected(value) async {
+    if (value == 1) {
+      Navigator.pushNamed(context, AddLoyaltyCard.id,
+          arguments: LoyaltyCardArguments(
+              docId: widget.modelLoayltyCard.docId,
+              isEditing: true,
+              modelLoayltyCard: widget.modelLoayltyCard));
+    } else if (value == 2) {
+      await _databaseService.deletCard(widget.modelLoayltyCard.docId ?? "");
+      Navigator.of(context).pushReplacementNamed(LoyaltyCards.id);
+    }
   }
 }

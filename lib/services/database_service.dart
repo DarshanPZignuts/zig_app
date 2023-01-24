@@ -44,22 +44,28 @@ class DatabaseService {
         .collection("loyaltyCards")
         .doc();
 
-    reference.set({
-      "cardName": cardName,
-      "vendor": vendor,
-      "programmeName": programmeName,
-      "webURL": webURL,
-      "note": note,
-      "cardFrontURL": cardFrontURL,
-      "cardBackURL": cardBackURL
-    });
+    reference
+        .set({
+          "cardName": cardName,
+          "vendor": vendor,
+          "programmeName": programmeName,
+          "webURL": webURL,
+          "note": note,
+          "cardFrontURL": cardFrontURL,
+          "cardBackURL": cardBackURL
+        })
+        .then((value) => onSuccess)
+        .onError((error, stackTrace) => onError);
   }
 
-  updateCardDetails(
-      {required ModelLoayltyCard modelLoayltyCard,
-      required String frontURL,
-      required String backURL,
-      required String docId}) async {
+  updateCardDetails({
+    required ModelLoayltyCard modelLoayltyCard,
+    required String frontURL,
+    required String backURL,
+    required String docId,
+    required Function onError,
+    required Function onSuccess,
+  }) async {
     DocumentReference reference = _firebaseFirestore
         .collection("User")
         .doc(
@@ -67,14 +73,17 @@ class DatabaseService {
         .collection("loyaltyCards")
         .doc(docId);
 
-    await reference.update({
-      "cardFrontURL": frontURL,
-      "cardBackURL": backURL,
-      "cardName": modelLoayltyCard.cardName,
-      "vendor": modelLoayltyCard.vendor,
-      "programmeName": modelLoayltyCard.programmeName,
-      "webURL": modelLoayltyCard.webURL,
-      "note": modelLoayltyCard.note,
-    });
+    await reference
+        .update({
+          "cardFrontURL": frontURL,
+          "cardBackURL": backURL,
+          "cardName": modelLoayltyCard.cardName,
+          "vendor": modelLoayltyCard.vendor,
+          "programmeName": modelLoayltyCard.programmeName,
+          "webURL": modelLoayltyCard.webURL,
+          "note": modelLoayltyCard.note,
+        })
+        .then((value) => onSuccess)
+        .onError((error, stackTrace) => onError(error));
   }
 }
